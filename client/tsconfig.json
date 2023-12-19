@@ -13,8 +13,8 @@
     "useUnknownInCatchVariables": false,
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
-    "baseUrl": ".",
-    // "types": ["vite-plugin-vue-layouts/client"],
+    "baseUrl": "./src",
+    "types": ["vite-plugin-vue-layouts/client"],
     "paths": {
       "@/*": ["*"],
       "@components/*": ["components/*"],

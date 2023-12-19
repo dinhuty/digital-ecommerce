@@ -2,7 +2,7 @@
 export default {
   content: ["./index.html", "./src/**/*.{vue,ts,js}"],
   prefix: "tw-",
-  darkMode: "media", // or 'media' or 'class'
+  darkMode: "media",
   theme: {
     screens: {
       xs: "480",
@@ -11,6 +11,30 @@ export default {
       lg: "1024px",
       xl: "1200px",
       "2xl": "1480px",
+    },
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      'white': '#ffffff',
+      'purple': '#3f3cbb',
+      'midnight': '#121063',
+      'metal': '#565584',
+      'tahiti': '#3ab7bf',
+      'silver': '#ecebff',
+      'bubble-gum': '#ff77e9',
+      'bermuda': '#78dcca',
+      'tahiti': {
+        base: '#67e8f9',
+        100: '#cffafe',
+        200: '#a5f3fc',
+        300: '#67e8f9',
+        400: '#22d3ee',
+        500: '#06b6d4',
+        600: '#0891b2',
+        700: '#0e7490',
+        800: '#155e75',
+        900: '#164e63',
+      },
     },
     borderRadius: {
       none: "0",
