@@ -1,6 +1,7 @@
 import * as path from "path"
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import AutoImport from "unplugin-auto-import/vite";
 import Pages from 'vite-plugin-pages'
 import Layouts from 'vite-plugin-vue-layouts'
 
@@ -25,13 +26,35 @@ export default defineConfig({
     Pages(),
     Layouts({
       defaultLayout: 'default'
-    })
+    }),
+    AutoImport({
+      include: [
+        /\.[t]s?$/, // .ts
+        /\.vue$/,
+        /\.vue\?vue/, // .vue
+      ],
+      dts: "./src/auto-imports.d.ts",
+      imports: [
+        "vue",
+        "vue-router",
+        {
+          "@vueuse/core": [["get", "v"], "set", "useAsyncState"],
+        },
+      ],
+      dirs: [
+        "./src/composables",
+        "./src/composables/**",
+        "./src/components/**",
+      ],
+    }),
     
   ],
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/assets/scss/_mixins.scss";`,
+        additionalData: `@import "@/assets/scss/_mixins.scss";
+                        @import "@/assets/scss/_variables.scss";
+        `,
       },
     },
   },

@@ -1,7 +1,6 @@
 <template>
-    <div class="my-app">
+    <div class="my-app tw-bg-white">
       <router-view></router-view>
-      <LoadingPage />
     </div>
 </template>
   
@@ -10,4 +9,5 @@ import LoadingPage from "@components/base/LoadingPage.vue";
 </script>
 
 <style scoped lang="scss">
+
 </style>
