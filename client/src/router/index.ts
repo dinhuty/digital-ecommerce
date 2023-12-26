@@ -10,4 +10,13 @@ const router = createRouter({
   linkActiveClass: "is-active",
 });
 
+router.afterEach((to) => {
+  const defaultDocumentTitle = "Vue 3 + Vite App";
+  if (to.name) {
+    document.title = `${String(to.name)} — ${defaultDocumentTitle}`;
+  } else {
+    document.title = defaultDocumentTitle;
+  }
+});
+
 export default router;

@@ -1,9 +1,9 @@
 <template>
   <div class="default-layout">
     <Header></Header>
-    <Container class="tw-py-4 app-main">
+    <div class="app-main">
       <router-view></router-view>
-    </Container>
+    </div>
     <Footer></Footer>
   </div>
 </template>

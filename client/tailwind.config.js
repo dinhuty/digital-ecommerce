@@ -44,7 +44,7 @@ export default {
       none: "0",
       xs: ".125rem",
       sm: ".375rem",
-      DEFAULT: ".25rem",
+      DEFAULT: "0.5rem",
       lg: ".5rem",
       xl: "1rem",
       full: "9999px",
@@ -60,6 +60,7 @@ export default {
       "2xl": "1.75rem", // 28px
       "3xl": "2rem", // 32px
       "4xl": "2.375rem", // 38px
+      "13px": "13px",
     },
     extend: {},
   },

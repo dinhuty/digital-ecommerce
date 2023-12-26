@@ -7,9 +7,9 @@
         <div
           class="header-left tw-h-full tw-flex tw-justify-center tw-items-center"
         >
-          <div class="header-logo tw-h-12 tw-w-auto">
+          <router-link to="/" class="header-logo tw-h-12 tw-w-auto">
             <img :src="Logo" alt="" class="tw-w-auto tw-h-full" />
-          </div>
+          </router-link>
         </div>
         <div class="header-search tw-flex-1">
           <input
