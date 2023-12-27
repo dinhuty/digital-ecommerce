@@ -1,5 +1,5 @@
 <template>
-  <div class="app-header tw-bg-black">
+  <div class="app-header tw-bg-red">
     <Container class="tw-h-20">
       <header
         class="tw-w-100 tw-flex tw-justify-between tw-h-full tw-items-center tw-gap-8"

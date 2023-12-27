@@ -23,7 +23,7 @@ export default {
       'silver': '#ecebff',
       'bubble-gum': '#ff77e9',
       'bermuda': '#78dcca',
-      'red': '#DB4444',
+      'red': '#d70018',
       'black': '#212121',
       'yellow': '#ffc400',
       'gray': {
@@ -53,7 +53,7 @@ export default {
       xxs: "0.625rem", // 10px
       xs: "0.75rem", // 12px
       sm: "0.875rem", // 14px
-      base: "1rem", // 16px
+      base: "0.875rem", // 14px
       md: "1.125rem", // 18px
       lg: "1.25rem", // 20px
       xl: "1.5625rem", // 25px

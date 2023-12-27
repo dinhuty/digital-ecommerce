@@ -86,8 +86,9 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-cube";
+import { SwiperModule } from "swiper/types";
 
-const modules = [Navigation, Pagination, Autoplay, EffectCube];
+const modules: SwiperModule[] = [Navigation, Pagination, Autoplay, EffectCube];
 </script>
 <route lang="yaml">
   name: Home Page
@@ -168,6 +169,10 @@ const modules = [Navigation, Pagination, Autoplay, EffectCube];
     box-shadow: $box-shadow-section;
 
     .list-product {
+      .swiper {
+        padding: 0 6px;
+      }
+
       #swiper-slider {
 
         .swiper-button-prev,
