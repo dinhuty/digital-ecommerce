@@ -11,9 +11,9 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-  const defaultDocumentTitle = "Vue 3 + Vite App";
+  const defaultDocumentTitle = "DSHOP";
   if (to.name) {
-    document.title = `${String(to.name)} — ${defaultDocumentTitle}`;
+    document.title = `${String(to.name)} | ${defaultDocumentTitle}`;
   } else {
     document.title = defaultDocumentTitle;
   }

@@ -91,7 +91,7 @@ import { SwiperModule } from "swiper/types";
 const modules: SwiperModule[] = [Navigation, Pagination, Autoplay, EffectCube];
 </script>
 <route lang="yaml">
-  name: Home Page
+  name: Trang chủ
   meta:
     layout: "default"
 </route>
