@@ -6,6 +6,10 @@
   
 <script lang="ts" setup>
 import LoadingPage from "@components/base/LoadingPage.vue";
+const isModalLogin = ref<boolean>(false)
+const handleCloseModalLogin = (): void => {
+  isModalLogin.value = !isModalLogin.value
+}
 </script>
 
 <style scoped lang="scss">
