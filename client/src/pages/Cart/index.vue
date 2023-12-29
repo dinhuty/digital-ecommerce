@@ -86,7 +86,8 @@
               39.900.000đ
             </span>
           </div>
-          <router-link to="/cart/checkout" class="btn-checkout tw-self-start tw-justify-self-start hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
+          <router-link to="/cart/checkout"
+            class="btn-checkout tw-self-start tw-justify-self-start hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
             <span>
               Mua ngay
             </span>
