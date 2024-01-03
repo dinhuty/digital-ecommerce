@@ -1,8 +1,22 @@
 const express = require('express')
 const router = express.Router()
+const authValidation = require('../validations/authValidation')
+const authController = require('../controllers/auth.controller')
+router.post(
+    '/register',
+    authValidation.register,
+    authController.register
+)
+router.post(
+    '/login',
+    authValidation.login,
+    authController.login
+)
 
-router.post('/sign-in', (req, res) => {
-    res.status(200).json("Success")
-})
+router.post(
+    '/refresh-token',
+    authController.refreshToken
+)
+
 
 module.exports = router
