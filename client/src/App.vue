@@ -1,15 +1,13 @@
 <template>
   <div class="my-app">
     <router-view></router-view>
+    <loading-page />
   </div>
 </template>
   
 <script lang="ts" setup>
 import LoadingPage from "@components/base/LoadingPage.vue";
-const isModalLogin = ref<boolean>(false)
-const handleCloseModalLogin = (): void => {
-  isModalLogin.value = !isModalLogin.value
-}
+
 </script>
 
 <style scoped lang="scss">

@@ -8,21 +8,29 @@
             Đăng ký tài khoản
           </h1>
         </div>
-        <form class="register-form tw-flex tw-flex-col tw-gap-5">
+        <p v-if="registerError" class="tw-text-red tw-text-sm tw-mt-0.5 tw-block tw-self-center">
+          {{ (registerError as IError)?.message }}
+        </p>
+        <p v-if="registerData" class="tw-text-success tw-text-sm tw-mt-0.5 tw-block tw-self-center">
+          {{ (registerData as any)?.message }}
+        </p>
+        <form @submit.prevent="handleRegister" class="register-form tw-flex tw-flex-col tw-gap-5">
           <div class="form__group tw-flex tw-flex-col tw-gap-4">
             <div>
-              <MyInput placeholder="example@gmail.com" name="email" />
+              <MyInput placeholder="example@gmail.com" v-model="dataForm.email" name="email" />
             </div>
             <div>
-              <MyInput placeholder="Nhập mật khẩu" name="password" />
+              <MyInput placeholder="Nhập mật khẩu" type="password" v-model="dataForm.password" name="password" />
             </div>
             <div>
-              <MyInput placeholder="Nhập lại mật khẩu" name="password" />
+              <MyInput placeholder="Nhập lại mật khẩu" type="password" v-model="dataForm.confirmPassword"
+                name="password" />
             </div>
           </div>
-          <div class="btn-form__submit tw-text-center hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
+          <button :disable="isRegisterLoading"
+            class="btn-form__submit tw-text-center hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
             Đăng ký
-          </div>
+          </button>
         </form>
         <div class="line-through tw-flex tw-gap-2 tw-items-center">
           <div class="tw-flex-1">
@@ -100,6 +108,25 @@
 import Container from "@components/base/Container.vue";
 import Logo from "@assets/svg/dshop-favicon-red.svg"
 import MyInput from "@components/common/MyInput/index.vue"
+import { IRegisterBody } from "@/types/auth.types";
+import { useAuth } from "@composables/useAuth"
+import { IError } from "@/types/error.type";
+
+const { registerData, registerError, isRegisterLoading, register } = useAuth()
+const dataForm = ref<IRegisterBody>({
+  email: '',
+  password: '',
+  confirmPassword: ''
+})
+const handleRegister = async () => {
+  await register({
+    email: dataForm.value.email,
+    password: dataForm.value.password,
+    confirmPassword: dataForm.value.confirmPassword
+  })
+  console.log(registerData.value)
+}
+
 </script>
 <route lang="yaml">
   name: Đăng ký tài khoản

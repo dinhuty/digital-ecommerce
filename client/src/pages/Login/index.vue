@@ -8,21 +8,25 @@
             Đăng nhập tài khoản
           </h1>
         </div>
-        <form class="login-form tw-flex tw-flex-col tw-gap-5">
+        <p class="tw-text-red tw-text-sm tw-mt-0.5 tw-block tw-self-center">
+          {{ (signInError as IError)?.message }}
+        </p>
+        <form @submit.prevent="handleLogin" class="login-form tw-flex tw-flex-col tw-gap-5">
           <div class="form__group tw-flex tw-flex-col tw-gap-4">
             <div>
-              <MyInput placeholder="example@gmail.com" name="email" />
+              <MyInput placeholder="example@gmail.com" v-model="loginData.email" @keyup.enter="loginData" name="email" />
             </div>
             <div>
-              <MyInput placeholder="Nhập mật khẩu" name="password" />
+              <MyInput placeholder="Nhập mật khẩu" type="password" v-model="loginData.password" @keyup.enter="loginData"
+                name="password" />
             </div>
             <div class="forget-pass tw-self-end tw-italic tw-text-gray-500 tw-cursor-pointer">
               Quên mật khẩu
             </div>
           </div>
-          <div class="btn-form__submit tw-text-center hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
+          <button class="btn-form__submit tw-text-center hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
             Đăng nhập
-          </div>
+          </button>
         </form>
         <div class="line-through tw-flex tw-gap-2 tw-items-center">
           <div class="tw-flex-1">
@@ -99,6 +103,27 @@
 import Container from "@components/base/Container.vue";
 import Logo from "@assets/svg/dshop-favicon-red.svg"
 import MyInput from "@components/common/MyInput/index.vue"
+import { IError } from "@/types/error.type"
+import { ILoginBody } from "@/types/auth.types";
+
+const { isSignInLoading, signInError, signIn } = useAuth();
+
+export interface LoginForm {
+  email: string;
+  password: string;
+}
+const loginData = ref<ILoginBody>({
+  email: '',
+  password: ''
+})
+const handleLogin = async () => {
+  await signIn({
+    email: loginData.value.email,
+    password: loginData.value.password
+  })
+}
+
+
 </script>
 <route lang="yaml">
   name: Đăng nhập
@@ -160,9 +185,11 @@ import MyInput from "@components/common/MyInput/index.vue"
       &__google,
       &__facebook {
         cursor: pointer;
-        &:hover{
+
+        &:hover {
           opacity: .75;
         }
+
         span {
           font-weight: 500;
         }

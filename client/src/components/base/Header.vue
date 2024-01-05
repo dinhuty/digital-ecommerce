@@ -13,7 +13,8 @@
         </div>
         <div class="header-right">
           <div class="header-item tw-h-full tw-flex tw-gap-1">
-            <router-link to="/cart" class="header-right-box tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white"
+            <router-link to="/cart"
+              class="header-right-box tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white"
               v-for="item in menuItems" :key="item.value">
               <div class="box-icon">
                 <font-awesome-icon :icon="item.icon" />
@@ -27,7 +28,17 @@
                 </span>
               </div>
             </router-link>
-            <router-link to="/login"
+            <router-link v-if="loggedIn" to="/profile"
+              class="header-right-box header-right-box__login tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white">
+              <div class="box-icon">
+                <font-awesome-icon icon="fa-regular fa-user" />
+              </div>
+              <div class="box-text tw-flex tw-flex-col tw-font-normal">
+                <span> Tài </span>
+                <span> khoản </span>
+              </div>
+            </router-link>
+            <router-link v-else to="/login"
               class="header-right-box header-right-box__login tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white">
               <div class="box-icon">
                 <font-awesome-icon icon="fa-regular fa-user" />
@@ -49,6 +60,8 @@ import Container from "@components/base/Container.vue";
 import Logo from "@assets/svg/logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { ICategory, IHeaderItem } from "@/types/category.types";
+import { useAuth } from '@composables/useAuth'
+
 const menuItems = ref<IHeaderItem[]>([
   {
     value: "help",
@@ -72,11 +85,13 @@ const menuItems = ref<IHeaderItem[]>([
     path: "/",
   },
 ]);
-
+const { loggedIn, user } = useAuth();
+console.log("CHecklogin", loggedIn.value)
 </script>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+
 
 export default defineComponent({
   name: "Header",

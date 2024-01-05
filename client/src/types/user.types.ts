@@ -1,10 +1,9 @@
 export interface IUser {
-    id: number;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
-    image: string;
-    token: string;
-  }
+  id: string;
+  username: string;
+  email: string;
+  is_blocked: boolean;
+  avatar_url: string;
+  is_verified: string;
+  is_admin: string;
+}

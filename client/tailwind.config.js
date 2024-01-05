@@ -26,6 +26,7 @@ export default {
       'red': '#d70018',
       'black': '#212121',
       'yellow': '#ffc400',
+      'success': '#28a745',
       'gray': {
         50: '#fafaf9',
         100: '#f5f5f4',

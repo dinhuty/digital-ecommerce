@@ -18,5 +18,10 @@ router.post(
     authController.refreshToken
 )
 
+router.get(
+    '/profile/:id',
+    authController.profile
+)
+
 
 module.exports = router

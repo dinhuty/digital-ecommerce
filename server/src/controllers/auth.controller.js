@@ -56,18 +56,16 @@ const login = async (req, res) => {
         await User.update({ refreshToken: refreshToken }, { where: { email } })
 
         return res.status(StatusCodes.OK).json({
-            data: {
-                accessToken,
-                refreshToken: refreshToken,
-                user: {
-                    id: user.id,
-                    username: user.userName,
-                    email: user.email,
-                    is_blocked: user.isBlocked,
-                    avatar_url: user.avatarURL,
-                    is_verified: user.isVerified,
-                    is_admin: user.isAdmin
-                }
+            accessToken,
+            refreshToken: refreshToken,
+            user: {
+                id: user.id,
+                username: user.userName,
+                email: user.email,
+                is_blocked: user.isBlocked,
+                avatar_url: user.avatarURL,
+                is_verified: user.isVerified,
+                is_admin: user.isAdmin
             },
             message: ReasonPhrases.OK,
             status: StatusCodes.OK
@@ -143,10 +141,37 @@ const refreshToken = async (req, res) => {
         })
     }
 }
-
+const profile = async (req, res) => {
+    try {
+        console.log("check")
+        const { id } = req.params
+        const user = await User.findOne({ where: { id } });
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: "Không tìm thấy",
+                status: StatusCodes.NOT_FOUND
+            })
+        }
+        return res.status(StatusCodes.OK).json({
+            id: user.id,
+            username: user.userName,
+            email: user.email,
+            is_blocked: user.isBlocked,
+            avatar_url: user.avatarURL,
+            is_verified: user.isVerified,
+            is_admin: user.isAdmin,
+        })
+    } catch (error) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Lỗi server",
+            status: StatusCodes.BAD_REQUEST
+        })
+    }
+}
 
 module.exports = {
     register,
     login,
-    refreshToken
+    refreshToken,
+    profile
 }
