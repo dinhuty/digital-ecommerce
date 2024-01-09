@@ -33,7 +33,7 @@
           <swiper :modules="modules" :slides-per-view="3" :navigation="true" :space-between="24" id="swiper-slider"
             :breakpoints="breakpoints">
             <swiper-slide class="swiper-item" v-for="n in 8" :key="n">
-              <product-item />
+              <product-item :product="product" />
             </swiper-slide>
           </swiper>
         </div>
@@ -45,7 +45,7 @@
           <swiper :modules="modules" :slides-per-view="3" :navigation="true" :space-between="24" id="swiper-slider"
             :breakpoints="breakpoints">
             <swiper-slide class="swiper-item" v-for="n in 8" :key="n">
-              <product-item />
+              <product-item :product="product" />
             </swiper-slide>
           </swiper>
         </div>
@@ -58,7 +58,7 @@
         <Heading toptitle="Sản phẩm khác" title="Có thể bạn sẽ thích" :allow-view-all="false" />
         <div class="list-product tw-grid tw-grid-cols-5 tw-gap-5">
           <div class="product-item" v-for="n in 10" :key="n">
-            <product-item />
+            <product-item :product="product" />
           </div>
         </div>
         <div
@@ -87,8 +87,20 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-cube";
 import { SwiperModule } from "swiper/types";
+import { IProduct } from "@/types/product.types";
 
 const modules: SwiperModule[] = [Navigation, Pagination, Autoplay, EffectCube];
+
+const product: IProduct = {
+  id: "c7626d43-949b-4212-9084-86f747c6624f",
+  name: "iPhone 15 Pro MAx",
+  description: "iphone 15 pro max desc",
+  thumbUrl: "https://cdn.tgdd.vn/Products/Images/42/305658/TimerThumb/iphone-15-pro-max-(4).jpg",
+  slug: "iphone-15-pro-max",
+  basePrice: 24900000,
+  brandName: "apple",
+  categoryName: "mobile"
+}
 </script>
 <route lang="yaml">
   name: Trang chủ

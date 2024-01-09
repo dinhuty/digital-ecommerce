@@ -1,12 +1,14 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
+require('dotenv').config()
+
+const { corsMiddleware } = require('./middlewares')
 const cookieParser = require('cookie-parser')
 const createRouter = require('./routes')
 const connectDB = require("./database/config/connectDB");
-require('dotenv').config()
 
-app.use(cors())
+app.use(corsMiddleware)
+
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));

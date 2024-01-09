@@ -2,23 +2,21 @@
   <div class="product-item tw-relative tw-flex tw-flex-col tw-gap-4 tw-w-full tw-h-auto tw-bg-white tw-rounded-sm">
     <div class="product-top tw-overflow-hidden">
       <div class="product-img tw-overflow-hidden">
-        <img
-          src="http://res.cloudinary.com/dkgd2q69d/image/upload/c_fill,f_auto,h_600,w_600/v1/digital_products/ucd2m58yuds2ubjlkrtz"
-          alt="" class="hover:tw-scale-90 tw-transition-all" />
+        <img :src="product.thumbUrl" alt="" class="hover:tw-scale-90 tw-transition-all" />
       </div>
     </div>
     <div class="product-disc-persentage tw-absolute tw-flex tw-items-center tw-justify-center tw-text-white" :style="{
       backgroundImage: 'url(' + bgPercent + ')'
     }">
       <p>
-        Giảm 20%
+        Giảm {{ product.discountPercentage }}%
       </p>
     </div>
     <div class="product-bottom tw-flex tw-flex-col tw-gap-1.5">
-      <div class="product-name tw-font-bold">The nort coat</div>
+      <div class="product-name tw-font-bold">{{ product.name }}</div>
       <div class="product-price tw-flex tw-gap-3">
-        <div class="base-price tw-text-red tw-font-medium">$260</div>
-        <div class="disc-price tw-text-gray-500 tw-line-through">$320</div>
+        <div class="base-price tw-text-red tw-font-medium">{{ formatMoney(product.basePrice) }}</div>
+        <div class="disc-price tw-text-gray-500 tw-line-through">{{ formatMoney(product.basePrice) }}</div>
       </div>
       <div class="product-rating tw-flex tw-flex-row tw-gap-1 tw-items-center">
         <img :src="goldStar" alt="" class="tw-h-3" />
@@ -37,14 +35,12 @@ import heartSmall from "@assets/svg/heart-small.svg";
 import goldStar from "@assets/svg/gold-star.svg";
 import eyeIcon from "@assets/svg/group.svg";
 import bgPercent from "@assets/svg/bg-percent.svg"
-</script>
-<script lang="ts">
-import { defineComponent } from "vue";
+import { IProduct } from "@/types/product.types";
+import { formatMoney } from "@utils/formatMoney"
 
-export default defineComponent({
-  name: "ProductItem",
-});
+const { product } = defineProps<{ product: IProduct }>();
 </script>
+
 <style scoped lang="scss">
 .product-item {
   padding: 50px 16px 20px 16px;

@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       min: 6,
     },
-    avatarURL: {
+    avatarUrl: {
       type: DataTypes.STRING,
       defaultValue: null,
     },
@@ -73,6 +73,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     sequelize,
+    timestamps: true,
     modelName: 'User',
   });
   return User;

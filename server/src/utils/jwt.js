@@ -30,7 +30,7 @@ const jwtDecodeToken = (accessToken) => {
 }
 
 const jwtVerify = (accessToken) => {
-    return jwt.verify(accessToken, process.env.JWT_SECRET);
+    return jwt.verify(accessToken, process.env.ACCESS_TOKEN_PRIVATE_KEY);
 };
 
 module.exports = {

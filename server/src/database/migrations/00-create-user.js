@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      username: {
+      userName: {
         type: Sequelize.STRING,
         defaultValue: "username"
       },
@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      avatarURL: {
+      avatarUrl: {
         type: Sequelize.STRING,
         defaultValue: null,
       },

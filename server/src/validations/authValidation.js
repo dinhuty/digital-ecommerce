@@ -1,4 +1,8 @@
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
+const { NotFoundError,
+    BadRequestError,
+    UnauthorizedError,
+    ConflictError } = require('../errors')
 const winston = require('winston')
 const validator = require('validator')
 
@@ -6,10 +10,7 @@ const authValidation = {
     login: (req, res, next) => {
         try {
             if (!req.body.email || !req.body.password) {
-                return res.status(StatusCodes.BAD_REQUEST).json({
-                    message: "Thông tin không hợp lệ",
-                    status: StatusCodes.BAD_REQUEST
-                })
+                throw new BadRequestError("Thông tin không hợp lệ")
             }
             let normalizedEmail =
                 req.body.email && validator.normalizeEmail(req.body.email)
@@ -21,17 +22,19 @@ const authValidation = {
                 !normalizedEmail ||
                 !validator.isEmail(normalizedEmail, { allow_utf8_local_part: false })
             ) {
-                return res.status(StatusCodes.BAD_REQUEST).json({
-                    message: "Email không hợp lệ",
-                    status: StatusCodes.BAD_REQUEST
-                })
+                throw new BadRequestError("Email không hợp lệ")
             }
             Object.assign(req.body, { email: normalizedEmail })
 
             return next()
         } catch (error) {
             winston.error(error)
-
+            if (error instanceof BadRequestError) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    message: error.message,
+                    status: error.statusCode
+                })
+            }
             return res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Lỗi server",
                 status: StatusCodes.BAD_REQUEST
@@ -45,10 +48,7 @@ const authValidation = {
                 !req.body.email ||
                 !req.body.password
             ) {
-                return res.status(StatusCodes.BAD_REQUEST).json({
-                    message: "Thông tin không hợp lệ",
-                    status: StatusCodes.BAD_REQUEST
-                })
+                throw new BadRequestError('Thông tin không hợp lệ')
             }
 
             let normalizedEmail =
@@ -61,16 +61,11 @@ const authValidation = {
                 !normalizedEmail ||
                 !validator.isEmail(normalizedEmail, { allow_utf8_local_part: false })
             ) {
-                return res.status(StatusCodes.BAD_REQUEST).json({
-                    message: "Email không hợp lệ",
-                    status: StatusCodes.BAD_REQUEST
-                })
+                throw new BadRequestError('Thông tin không hợp lệ')
             }
 
             if (!validator.isLength(req.body.password, { min: 6, max: 48 })) {
-                return res.status(StatusCodes.BAD_REQUEST).json({
-                    message: "Mật khẩu tối thiểu 6 kí tự"
-                })
+                throw new BadRequestError('Mật khẩu tối thiểu 6 kí tự')
             }
 
             Object.assign(req.body, { email: normalizedEmail })
@@ -78,7 +73,12 @@ const authValidation = {
             return next()
         } catch (error) {
             winston.error(error)
-
+            if (error instanceof BadRequestError) {
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    message: error.message,
+                    status: StatusCodes.BAD_REQUEST
+                })
+            }
             return res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Lỗi server",
                 status: StatusCodes.BAD_REQUEST

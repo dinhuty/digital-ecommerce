@@ -1,11 +1,11 @@
 <template>
-  <div class="app-mobile-list tw-flex tw-flex-col tw-gap-5 tw-pb-4">
+  <div class="app-product-list tw-flex tw-flex-col tw-gap-5 tw-pb-4">
     <BreadScrumb />
     <Container class="main tw-flex tw-gap-8 tw-flex-col">
       <div class="ads tw-flex tw-justify-center">
         <img :src="noen_1" alt="">
       </div>
-      <div class="mobile-selling tw-rounded-xl tw-p-4 tw-flex tw-flex-col tw-gap-4">
+      <div class="product-selling tw-rounded-xl tw-p-4 tw-flex tw-flex-col tw-gap-4">
         <Heading event-title="FLASH SALE" :timer="true" />
         <div class="list-product">
           <swiper :modules="modules" :slides-per-view="3" :navigation="true" :space-between="24" id="swiper-slider"
@@ -44,16 +44,9 @@
           </div>
         </div>
         <div class="product-box tw-grid tw-grid-cols-5 tw-gap-5">
-          <!-- <product-item />
-          <product-item />
-          <product-item />
-          <product-item />
-          <product-item />
-          <product-item />
-          <product-item />
-          <product-item />
-          <product-item />
-          <product-item /> -->
+          <div v-for="product in data?.products" :key="product.id">
+            <ProductItem :product="product" />
+          </div>
         </div>
         <div
           class="btn-view tw-mt-5 tw-self-center tw-p-3 tw-bg-red tw-text-white hover:tw-opacity-70 tw-transition-all tw-rounded-sm tw-text-13px">
@@ -80,6 +73,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-cube";
+import { useGetProductsByCategory } from "@/api/product/query";
 
 const modules = [Navigation, Pagination, Autoplay, EffectCube];
 interface IFilter {
@@ -98,16 +92,23 @@ const selectedItem = ref<ISelectItem>({
   option: '',
   price: '',
 })
+const {
+  params: { categoryName },
+} = useRoute();
+
+const { data } = useGetProductsByCategory(categoryName as string);
+
+console.log(data)
 </script>
 <route lang="yaml">
-  name: Product page
+  name: Điện thoại
   meta:
     layout: "default"
 </route>
 <style lang="scss">
-.app-mobile-list {
+.app-product-list {
 
-  .mobile-selling {
+  .product-selling {
     background-color: #013c34;
 
     #swiper-slider {
