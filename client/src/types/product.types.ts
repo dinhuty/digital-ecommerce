@@ -11,19 +11,28 @@ export interface IProduct {
   categoryName?: string;
   thumbUrl?: string;
   images?: string[];
-  productSpecs?: IProductSpec
+  productSpecs?: IProductSpec[]
+}
+
+export interface ISpecification {
+  id: number,
+  specName: string
 }
 
 export interface IProductSpec {
-  specification?: Object,
-  specValue: string
+  specification?: ISpecification,
+  specValue?: string
 }
 export interface IParams {
   page?: number;
   limit?: number;
   skip?: number;
   select?: string;
+  order?: string,
+  dir?: string,
+  brand?: string
 }
+
 
 export interface IProductsListResponse {
   products: IProduct[];

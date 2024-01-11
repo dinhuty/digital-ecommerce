@@ -2,6 +2,7 @@ import useAuthStore from "@store/auth";
 import { storeToRefs } from "pinia";
 import { RouteLocationNormalized, NavigationGuardNext } from "vue-router";
 import { ACCESS_TOKEN_KEY, USER_ID } from "@/utils/constants";
+import useStore from "@/store";
 
 export const auth = async (
     from: RouteLocationNormalized,
@@ -9,7 +10,6 @@ export const auth = async (
     next: NavigationGuardNext
 ) => {
     const { getUserInfo } = useAuthStore();
-    // const { loggedIn } = storeToRefs(useAuthStore());
 
     if (from.meta.requiresAuth) {
         const access_token = localStorage.getItem(ACCESS_TOKEN_KEY);

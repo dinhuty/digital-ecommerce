@@ -9,7 +9,9 @@
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
     "m": "npx sequelize-cli db:migrate",
-    "mu": "npx sequelize-cli db:migrate:undo:all"
+    "mu": "npx sequelize-cli db:migrate:undo:all",
+    "s": "npx sequelize-cli db:seed:all",
+    "su": "npx sequelize-cli db:seed:undo:all"
   },
   "author": "dinhuty",
   "license": "ISC",

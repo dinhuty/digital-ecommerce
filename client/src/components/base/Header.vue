@@ -86,18 +86,7 @@ const menuItems = ref<IHeaderItem[]>([
   },
 ]);
 const { loggedIn, user } = useAuth();
-console.log("CHecklogin", loggedIn.value)
 </script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-
-
-export default defineComponent({
-  name: "Header",
-});
-</script>
-
   
 <style scoped lang="scss">
 .app-header {

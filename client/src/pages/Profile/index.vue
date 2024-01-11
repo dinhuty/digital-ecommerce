@@ -11,7 +11,7 @@ import Container from "@components/base/Container.vue";
 import { useAuth } from '@composables/useAuth'
 
 const { user } = useAuth()
-console.log(user.value)
+console.log(user)
 </script>
 <route lang="yaml">
   name: Profile

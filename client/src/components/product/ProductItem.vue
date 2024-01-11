@@ -1,10 +1,10 @@
 <template>
   <div class="product-item tw-relative tw-flex tw-flex-col tw-gap-4 tw-w-full tw-h-auto tw-bg-white tw-rounded-sm">
-    <div class="product-top tw-overflow-hidden">
+    <router-link  :to="`/product/${path}`" class="product-top tw-block tw-overflow-hidden">
       <div class="product-img tw-overflow-hidden">
         <img :src="product.thumbUrl" alt="" class="hover:tw-scale-90 tw-transition-all" />
       </div>
-    </div>
+    </router-link>
     <div class="product-disc-persentage tw-absolute tw-flex tw-items-center tw-justify-center tw-text-white" :style="{
       backgroundImage: 'url(' + bgPercent + ')'
     }">
@@ -13,10 +13,11 @@
       </p>
     </div>
     <div class="product-bottom tw-flex tw-flex-col tw-gap-1.5">
-      <div class="product-name tw-font-bold">{{ product.name }}</div>
-      <div class="product-price tw-flex tw-gap-3">
-        <div class="base-price tw-text-red tw-font-medium">{{ formatMoney(product.basePrice) }}</div>
+      <router-link :to="`/product/${path}`" class="product-name tw-cursor-pointer hover:tw-text-red tw-transition-all tw-font-bold">{{
+        product.name }}</router-link>
+      <div class="product-price lg:tw-flex-row tw-flex-col lg:tw-gap-3 tw-flex tw-gap-0.5">
         <div class="disc-price tw-text-gray-500 tw-line-through">{{ formatMoney(product.basePrice) }}</div>
+        <div class="base-price tw-text-red tw-font-medium">{{ formatMoney(product.basePrice) }}</div>
       </div>
       <div class="product-rating tw-flex tw-flex-row tw-gap-1 tw-items-center">
         <img :src="goldStar" alt="" class="tw-h-3" />
@@ -38,7 +39,7 @@ import bgPercent from "@assets/svg/bg-percent.svg"
 import { IProduct } from "@/types/product.types";
 import { formatMoney } from "@utils/formatMoney"
 
-const { product } = defineProps<{ product: IProduct }>();
+const { product, path } = defineProps<{ product: IProduct, path?: string }>();
 </script>
 
 <style scoped lang="scss">
@@ -56,13 +57,12 @@ const { product } = defineProps<{ product: IProduct }>();
     top: 12px;
     font-size: 12px;
     font-weight: 600;
-    // padding: 4px 6px;
-    // align-items: center;
-    // gap: 10px;
-    // font-size: 13px;
-    // border-radius: 0px 8px 8px 0px;
-    // background: var(--primary-secondary-secondary-100, #fdc9c94e);
-    // color: #e30019;
+  }
+
+  .product-price {
+    .disc-price {
+      font-size: 13px;
+    }
   }
 }
 </style>

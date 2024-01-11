@@ -1,4 +1,4 @@
-interface ISelectBox {
+export interface ISelectBox {
     displayName: string,
     value: string,
     type: string
@@ -10,7 +10,7 @@ interface IFilterBox {
     type: string
 }
 
-const phoneBrands: ISelectBox[] = [
+const fBrands: ISelectBox[] = [
     {
         displayName: "Apple",
         value: "apple",
@@ -43,7 +43,7 @@ const phoneBrands: ISelectBox[] = [
     },
 
 ]
-const phoneOptions: ISelectBox[] = [
+const fOptions: ISelectBox[] = [
     {
         displayName: "64GB",
         value: "64g",
@@ -67,7 +67,7 @@ const phoneOptions: ISelectBox[] = [
 
 ]
 
-const phonePrices: ISelectBox[] = [
+const fPrices: ISelectBox[] = [
     {
         displayName: "dưới 1 triệu",
         value: '1000000',
@@ -91,4 +91,4 @@ const phonePrices: ISelectBox[] = [
 ]
 
 
-export { phoneBrands, phoneOptions, phonePrices }
+export { fBrands, fOptions, fPrices }

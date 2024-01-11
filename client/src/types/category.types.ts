@@ -1,11 +1,11 @@
-export interface ICategory{
+export interface ICategory {
     id: number,
-    name: string,
-    icon: string,
-    path: string
+    title: string,
+    icon?: string,
+    pathName: string
 }
 
-export interface IHeaderItem{
+export interface IHeaderItem {
     value: string,
     icon: string,
     fText: string,

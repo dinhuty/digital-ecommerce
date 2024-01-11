@@ -16,11 +16,9 @@ const useStore = defineStore("root", {
         collapseMenu() {
             this.isCollapse = !this.isCollapse;
         },
-
         start() {
             this.isLoading = true;
         },
-
         finish() {
             this.isLoading = false;
         },

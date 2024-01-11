@@ -1,10 +1,9 @@
 <template>
     <Listbox v-model="selectedItem" class="select-box tw-text-13px">
         <div class="tw-relative tw-mt-1">
-
             <ListboxButton v-if="selectedItem"
                 class="btn-select-box box-active hover:tw-opacity-80 tw-transition-all tw-relative tw-w-full tw-bg-gray-200 tw-cursor-default tw-rounded-lg tw-py-2 tw-pl-3 tw-pr-10 tw-text-left tw-focus:outline-none tw-focus-visible:border-indigo-500 tw-focus-visible:ring-2 tw-focus-visible:ring-white/75 tw-focus-visible:ring-offset-2 tw-focus-visible:ring-offset-orange-300 tw-sm:text-sm">
-                <span class="tw-block tw-truncate ">{{ selectedItem.displayName }}</span>
+                <span class="tw-block tw-truncate ">{{ getDisplayName(items, selectedItem) }}</span>
                 <span class="tw-pointer-events-none tw-absolute tw-inset-y-0 tw-right-0 tw-flex tw-items-center tw-pr-2">
                     <svg viewBox="0 0 24 24" class="tw-w-3" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -45,8 +44,8 @@
                             ]">{{ title }}</span>
                         </li>
                     </ListboxOption>
-                    <ListboxOption v-slot="{ active, selected }" v-for="item in props.items" :key="item.value" :value="item"
-                        as="template">
+                    <ListboxOption v-slot="{ active, selected }" v-for="item in props.items" :key="item.value"
+                        :value="item.value" as="template">
                         <li :class="[
                             active ? 'tw-bg-gray-100 tw-text-gray-900' : 'tw-text-gray-900',
                             'tw-cursor-default tw-py-2 tw-px-2',
@@ -74,22 +73,24 @@ import {
     ListboxOptions,
     ListboxOption,
 } from '@headlessui/vue'
+import { ISelectBox } from '@utils/filter-sort/filter'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
-const props = defineProps(['modelValue', "items" , "title"])
+const props = defineProps(['modelValue', "items", "title"])
 const emit = defineEmits(['update:modelValue'])
 
 const selectedItem = computed({
     get() {
-        console.log(props)
         return props.modelValue;
     },
     set(newValue) {
-        console.log(">>",newValue)
         emit("update:modelValue", newValue);
     },
 });
-
+const getDisplayName = (items: ISelectBox[], value: string): string => {
+    const item = items.find((item) => item.value === value)
+    return item ? item.displayName : ''
+}
 </script>
 
 <style lang="scss" scoped>
@@ -99,10 +100,11 @@ const selectedItem = computed({
     .btn-select-box {
         border: 1px solid #e5e7eb;
         background-color: #f3f4f6;
+        color: $black;
 
         &.box-active {
-            border: 2px solid #4b4b4b5d;
-            color: #000;
+            border: 1px solid $red;
+            color: $red;
             font-weight: 600;
         }
     }

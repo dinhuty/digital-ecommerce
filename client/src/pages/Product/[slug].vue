@@ -4,7 +4,7 @@
     <Container class="tw-flex tw-gap-8 tw-flex-col">
       <div class="product-name">
         <p>
-          Điện thoại iPhone 15 Pro Max 256GB
+          {{ product?.name }}
         </p>
       </div>
       <div class="product-main">
@@ -45,7 +45,7 @@
           </div>
           <div class="product-price">
             <span>
-              29.000.000đ
+              {{ formatMoney(product?.basePrice as number) }}
             </span>
           </div>
           <div class="product-options">
@@ -103,20 +103,15 @@
         <div class="title">Thông số kỹ thuật</div>
         <div class="desc">
           <ul class="technical">
-            <li v-for="n in 8" :key="n">
-              <h5>Màn hình:</h5>
-              <div>AMOLED 6.7'Full HD+</div>
+            <li v-for="(specData, index) in product?.productSpecs" :key="index">
+              <h5>{{ specData?.specification?.specName }}:</h5>
+              <div>{{ specData?.specValue }}</div>
             </li>
           </ul>
           <div class="introduce">
             <span>Giới thiệu</span>
             <p>
-              OPPO Reno10 Pro 5G là một trong những sản phẩm của OPPO được ra mắt trong 2023. Với thiết kế đẹp mắt, màn
-              hình lớn và hiệu năng mạnh mẽ, Reno10 Pro chắc chắn sẽ là lựa chọn đáng cân nhắc dành cho những ai đang tìm
-              kiếm chiếc máy tầm trung để phục vụ tốt mọi nhu cầu. Thiết kế của Reno10 Pro 5G trông rất ấn tượng với kiểu
-              thiết kế bo cong ở mặt lưng và màn hình, điều này mang lại trải nghiệm cầm nắm thoải mái khi sử dụng để
-              không cảm thấy bị cấn, phần viền màn hình vì thế cũng trông mỏng hơn giúp tạo nên một tổng thể sang trọng và
-              cực kỳ bắt mắt.
+              {{ product?.description }}
             </p>
           </div>
         </div>
@@ -150,6 +145,8 @@ import { SwiperModule, SwiperOptions, Swiper as SwiperClass } from "swiper/types
 import { breakpoints } from "@utils/breackpoints"
 import ProductItem from "@/components/product/ProductItem.vue";
 import Heading from "@/components/base/Heading.vue";
+import { useGetProductDetails } from "@/api/product/query";
+import { formatMoney } from "@/utils/formatMoney";
 
 const thumbsSwiper = ref<any>(null);
 
@@ -158,7 +155,11 @@ const setThumbsSwiper = (swiper: any) => {
 };
 
 const modules: SwiperModule[] = [FreeMode, Navigation, Thumbs, Pagination];
+const {
+  params: { slug },
+} = useRoute();
 
+const { data: product } = useGetProductDetails(slug as string)
 </script>
 <route lang="yaml">
   name: iPhone 15 Pro Max
@@ -530,9 +531,10 @@ const modules: SwiperModule[] = [FreeMode, Navigation, Thumbs, Pagination];
 
 
   .product-similar {
-    .swiper{
+    .swiper {
       padding: 0 6px;
     }
+
     .swiper-button-prev:after,
     .swiper-button-next:after {
       background-color: $white;
