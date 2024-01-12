@@ -1,5 +1,5 @@
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
-const { User, Product, Brand, sequelize, Category, Specification, ProductSpecification } = require('../database/models')
+const { User, Product, Brand, sequelize, Category, Specification, ProductSpecification, ProductVariant, Color, Memory } = require('../database/models')
 const { comparePassword, jwtCreate, jwtVerify } = require('../utils')
 const { jwtDecodeToken } = require('../utils/jwt')
 const { Op } = require("sequelize");
@@ -143,6 +143,27 @@ const getProductBySlug = async (req, res, next) => {
                             as: 'specification',
                             attributes: ['specName'],
                         }
+                    ]
+                },
+                {
+                    model: ProductVariant,
+                    as: 'productVariants',
+                    attributes: ['stock', 'price'],
+                    include: [
+                        {
+                            model: Color,
+                            as: 'color',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt']
+                            }
+                        },
+                        {
+                            model: Memory,
+                            as: 'memory',
+                            attributes: {
+                                exclude: ['createdAt', 'updatedAt']
+                            }
+                        },
                     ]
                 }
             ],

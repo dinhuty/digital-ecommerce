@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(models.ProductImage, {
                 foreignKey: 'productId',
                 as: 'images'
+            });
+            this.hasMany(models.ProductVariant, {
+                foreignKey: 'productId',
+                as: 'productVariants'
             })
         }
     }

@@ -7,9 +7,9 @@
             d="M13.2,9.061H12.1v3.965a.6.6,0,0,1-.661.661H8.793V9.721H6.15v3.965H3.507a.6.6,0,0,1-.661-.661V9.061h-1.1c-.4,0-.311-.214-.04-.494L7,3.259a.634.634,0,0,1,.936,0l5.3,5.307c.272.281.356.495-.039.495Z"
             transform="translate(-1.471 -3.053)" fill="#d70018"></path>
         </svg>
-        <span>
+        <router-link to="/" class="tw-block">
           Trang chủ
-        </span>
+        </router-link>
       </div>
       <div class="nav-item tw-flex tw-items-center tw-gap-2" v-for="(n, index) in navItems" :key="index">
         <div class="icon">
@@ -34,7 +34,10 @@
 <script lang="ts" setup>
 import Container from './Container.vue';
 
-
+interface INav {
+  name: string,
+  path: string
+}
 const navItems: string[] = [
   "Điện thoại",
   "iPhone 15 Pro Max"
@@ -54,6 +57,12 @@ export default {
   .main {
     display: flex;
     font-size: 13px;
+
+    .item {
+      &:hover {
+        color: $red;
+      }
+    }
   }
 
   .icon {

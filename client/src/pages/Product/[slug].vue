@@ -2,8 +2,9 @@
   <div class="app-product-detail tw-flex tw-flex-col tw-gap-5 tw-pb-4">
     <BreadScrumb />
     <Container class="tw-flex tw-gap-8 tw-flex-col">
-      <div class="product-name">
+      <div class="product-title">
         <p>
+          {{ getNameCategory(product?.categoryName) }}
           {{ product?.name }}
         </p>
       </div>
@@ -41,38 +42,39 @@
               <span> 4.9 </span>
               <font-awesome-icon icon="star" />
             </div>
-            <div class="sold">Sold 125</div>
+            <div class="sold">Đã bán: 125</div>
           </div>
           <div class="product-price">
             <span>
-              {{ formatMoney(product?.basePrice as number) }}
+              {{ formatMoney(getPriceByVariant(productSelected?.colorId as number, productSelected.memoryId as number,
+                product?.productVariants, product?.basePrice)) }}
             </span>
           </div>
           <div class="product-options">
             <div class="option-specs">
-              <div class="title">Bộ nhớ:</div>
-              <!-- <div :class="[
-                selectProduct.option.attribute._id === att._id
-                  ? 'active'
-                  : '',
-                'spec',
-              ]" @click="selectProductOption({ att })" v-for="att in product.options.attribute" :key="att._id">
-                {{ att.value }}
-              </div> -->
-              <!-- <div>
-                                {{ selectProduct.option.attribute.quantity }}
-                            </div> -->
+              <div class="title">Cấu hình:</div>
+              <div v-for="memory in getListVariant(product?.productVariants as IProductVariant[]).memoriesArray"
+                :key="memory.id" :class="[
+                  productSelected?.memoryId === memory.id ? 'active' : '', 'spec hover:tw-opacity-60 tw-transition-all',
+                ]" @click="handleUpdateProductSelected(0, memory.id)">
+                {{ memory.ram }}/{{ memory.rom }}
+              </div>
             </div>
             <div class="option-colors">
               <h3 class="title">Màu sắc:</h3>
-              <!-- <span :style="{ 'background-color': color.value }" :class="[
-                selectProduct.option.color.value === color.value
-                  ? 'active'
-                  : '',
-                'color',
-              ]" @click="selectProductOption({ color })" v-for="color in product.options.colors" :key="color.value">
-              </span> -->
+              <div v-for="color in getListVariant(product?.productVariants as IProductVariant[]).colorsArray"
+                :key="color.id" :class="[
+                  productSelected?.colorId === color.id ? 'active' : '', 'color hover:tw-opacity-60  tw-transition-all',
+                ]" @click="handleUpdateProductSelected(color.id)">
+                {{ color.name }}
+              </div>
             </div>
+            <span class="tw-text-gray-500 tw-text-xs tw-italic">
+              {{
+                getStockByVariant(productSelected?.colorId as number, productSelected.memoryId as number,
+                  product?.productVariants)
+              }} sản phẩm có sẵn
+            </span>
           </div>
           <div class="product-benefit">
             <h3 class="title">
@@ -94,7 +96,7 @@
               <li>Thanh toán khi nhận hàng</li>
             </ul>
           </div>
-          <div class="product-btn">
+          <div class="product-btn" @click="() => { console.log(productSelected) }">
             Mua ngay
           </div>
         </div>
@@ -121,8 +123,8 @@
         <div class="list-product">
           <swiper :modules="modules" :slides-per-view="4.5" :navigation="true" :space-between="24" id="swiper-slider"
             :breakpoints="breakpoints">
-            <swiper-slide class="swiper-item" v-for="n in 8" :key="n">
-              <!-- <ProductItem /> -->
+            <swiper-slide class="swiper-item" v-for="product in products" :key="product.id">
+              <ProductItem :product="product" :path="product.slug" />
             </swiper-slide>
           </swiper>
         </div>
@@ -145,9 +147,18 @@ import { SwiperModule, SwiperOptions, Swiper as SwiperClass } from "swiper/types
 import { breakpoints } from "@utils/breackpoints"
 import ProductItem from "@/components/product/ProductItem.vue";
 import Heading from "@/components/base/Heading.vue";
-import { useGetProductDetails } from "@/api/product/query";
+import { useGetProductDetails, useListProductsSale } from "@/api/product/query";
 import { formatMoney } from "@/utils/formatMoney";
+import { getNameCategory } from "@/utils/getNameCategory";
+import { getListVariant } from "@/utils/product/getListVariant"
+import { getPriceByVariant, getStockByVariant } from "@/utils/product/getPriceByVariant"
+import { IProductVariant } from "@/types/product.types";
 
+interface IProductSelected {
+  id: string | null,
+  colorId?: number | null,
+  memoryId?: number | null
+}
 const thumbsSwiper = ref<any>(null);
 
 const setThumbsSwiper = (swiper: any) => {
@@ -159,7 +170,39 @@ const {
   params: { slug },
 } = useRoute();
 
-const { data: product } = useGetProductDetails(slug as string)
+const { data: product, isFetching } = useGetProductDetails(slug as string)
+const { data: products } = useListProductsSale(10)
+const productSelected = reactive<IProductSelected>({
+  id: null,
+  colorId: null,
+  memoryId: null
+})
+
+const setProductSelectedValues = () => {
+  if (product.value?.productVariants) {
+    productSelected.id = product.value.id;
+    productSelected.colorId = product.value.productVariants[0]?.color?.id;
+    productSelected.memoryId = product.value.productVariants[0]?.memory?.id;
+  }
+};
+const handleUpdateProductSelected = (colorId?: number, memoryId?: number) => {
+  if (colorId) {
+    productSelected.colorId = colorId
+  }
+  if (memoryId) {
+    productSelected.memoryId = memoryId
+
+  }
+}
+onMounted(() => {
+  setProductSelectedValues();
+});
+
+watch(product, () => {
+  setProductSelectedValues();
+  console.log('wtd')
+});
+
 </script>
 <route lang="yaml">
   name: iPhone 15 Pro Max
@@ -169,7 +212,7 @@ const { data: product } = useGetProductDetails(slug as string)
 <style lang="scss">
 .app-product-detail {
 
-  .product-name {
+  .product-title {
     font-size: 20px;
     font-weight: 600;
     line-height: 30px;
@@ -274,7 +317,7 @@ const { data: product } = useGetProductDetails(slug as string)
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 32px;
+      gap: 10px;
 
       @include min-lg {
         width: 40%;
@@ -283,7 +326,7 @@ const { data: product } = useGetProductDetails(slug as string)
       .product-rating {
         display: flex;
         gap: 32px;
-        font-size: 14px;
+        font-size: 13px;
 
         .rating {
           display: flex;
@@ -311,11 +354,9 @@ const { data: product } = useGetProductDetails(slug as string)
     }
 
     .product-price {
-      padding: 15px;
       color: red;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 700;
-      background-color: rgba($yellow, 0.4);
       border-radius: 8px;
     }
 
@@ -328,6 +369,7 @@ const { data: product } = useGetProductDetails(slug as string)
         display: flex;
         flex-wrap: wrap;
         gap: 16px;
+        font-size: 13px;
 
         .title {
           align-self: center;
@@ -336,7 +378,7 @@ const { data: product } = useGetProductDetails(slug as string)
 
         .spec {
           padding: 10px;
-          border-radius: 8px;
+          border-radius: 4px;
           border: 2px solid $border-section;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
@@ -344,6 +386,8 @@ const { data: product } = useGetProductDetails(slug as string)
           &:hover,
           &.active {
             border: 2px solid $red;
+            background-color: rgba(255, 0, 0, 0.035);
+
           }
         }
       }
@@ -352,6 +396,8 @@ const { data: product } = useGetProductDetails(slug as string)
         display: flex;
         flex-wrap: wrap;
         gap: 16px;
+        font-size: 13px;
+        padding: 5px 0;
 
         .title {
           align-self: center;
@@ -359,24 +405,29 @@ const { data: product } = useGetProductDetails(slug as string)
         }
 
         .color {
-          height: 36px;
-          width: 36px;
-          border-radius: 50%;
-          background-color: $azure;
-          position: relative;
           cursor: pointer;
+          padding: 5px 10px;
+          border-radius: 2px;
+          border: 2px solid $border-section;
 
-          &.active::after {
-            content: "";
-            width: 46px;
-            height: 46px;
-            border: 2px solid #000;
-            position: absolute;
-            box-sizing: border-box;
-            border-radius: 50%;
-            left: -5px;
-            top: -5px;
+          &:hover,
+          &.active {
+            border: 2px solid $red;
+            background-color: rgba(255, 0, 0, 0.035);
+
           }
+
+          // &.active::after {
+          //   content: "";
+          //   width: 46px;
+          //   height: 46px;
+          //   border: 2px solid #000;
+          //   position: absolute;
+          //   box-sizing: border-box;
+          //   border-radius: 50%;
+          //   left: -5px;
+          //   top: -5px;
+          // }
         }
       }
     }
@@ -468,6 +519,10 @@ const { data: product } = useGetProductDetails(slug as string)
       }
 
       .technical {
+        background-color: $white;
+        border-radius: 4px;
+        overflow: hidden;
+
         @include min-lg {
           width: 50%;
         }
@@ -475,11 +530,15 @@ const { data: product } = useGetProductDetails(slug as string)
         li {
           padding: 16px;
           display: flex;
-          flex-direction: column;
+          // flex-direction: column;
           gap: 16px;
 
+          h5 {
+            width: 140px;
+          }
+
           @include min-lg {
-            flex-direction: row;
+            // flex-direction: row;
             gap: 0;
 
             h5 {
@@ -487,9 +546,7 @@ const { data: product } = useGetProductDetails(slug as string)
               display: inline-block;
               width: 140px;
               white-space: normal;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              font-weight: 600;
+
             }
 
             div {

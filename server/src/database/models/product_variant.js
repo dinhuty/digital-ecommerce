@@ -7,15 +7,15 @@ module.exports = (sequelize, DataTypes) => {
             // Product
             this.belongsTo(models.Product, {
                 foreignKey: "productId",
-                as: "products",
+                as: "product",
             });
             this.belongsTo(models.Memory, {
                 foreignKey: "colorId",
-                as: "color",
+                as: "memory",
             });
             this.belongsTo(models.Color, {
                 foreignKey: "memoryId",
-                as: "memory",
+                as: "color",
             });
         }
     }

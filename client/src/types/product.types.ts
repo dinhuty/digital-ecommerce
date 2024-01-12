@@ -11,7 +11,8 @@ export interface IProduct {
   categoryName?: string;
   thumbUrl?: string;
   images?: string[];
-  productSpecs?: IProductSpec[]
+  productSpecs?: IProductSpec[],
+  productVariants?: IProductVariant[]
 }
 
 export interface ISpecification {
@@ -40,4 +41,21 @@ export interface IProductsListResponse {
   skip: number;
   limit: number;
   page: number
+}
+export interface IColor {
+  id: number,
+  name?: string,
+  code?: string
+}
+export interface IMemory {
+  id: number,
+  ram?: string,
+  rom?: string,
+  chipset?: string
+}
+export interface IProductVariant {
+  stock?: number,
+  price?: number,
+  color?: IColor,
+  memory?: IMemory
 }
