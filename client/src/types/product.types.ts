@@ -54,6 +54,7 @@ export interface IMemory {
   chipset?: string
 }
 export interface IProductVariant {
+  id: number,
   stock?: number,
   price?: number,
   color?: IColor,

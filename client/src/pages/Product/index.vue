@@ -1,6 +1,6 @@
 <template>
     <div class="app-mobile-list tw-flex tw-flex-col tw-gap-5 tw-pb-4">
-        <BreadScrumb />
+        <BreadScrumb name-page="Tất cả sản phẩm"/>
         <Container class="main tw-flex tw-gap-8 tw-flex-col">
             <div class="ads tw-flex tw-justify-center">
                 <img :src="noen_1" alt="">

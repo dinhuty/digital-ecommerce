@@ -10,13 +10,17 @@ module.exports = (sequelize, DataTypes) => {
                 as: "product",
             });
             this.belongsTo(models.Memory, {
-                foreignKey: "colorId",
+                foreignKey: "memoryId",
                 as: "memory",
             });
             this.belongsTo(models.Color, {
-                foreignKey: "memoryId",
+                foreignKey: "colorId",
                 as: "color",
             });
+            this.hasMany(models.Cart,{
+                foreignKey: 'productVariantId',
+                as: "carts"
+            })
         }
     }
     ProductVariant.init(

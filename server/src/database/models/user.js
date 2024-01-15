@@ -4,7 +4,10 @@ const { hashPassword } = require('../../utils');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      this.hasMany(models.Cart, {
+        foreignKey: 'userId',
+        as: 'carts'
+      })
     }
   }
   User.init({

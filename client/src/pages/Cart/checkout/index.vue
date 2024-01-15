@@ -1,6 +1,6 @@
 <template>
     <div class="app-checkout tw-flex tw-flex-col tw-gap-7 tw-pb-4">
-        <BreadScrumb />
+        <!-- <BreadScrumb /> -->
         <Container class="checkout-section tw-flex tw-gap-5 tw-flex-col">
             <div class="title">
                 Kiểm tra thông tin

@@ -13,15 +13,16 @@ const auth = (req, res, next) => {
         req.id = id;
         next();
     } catch (error) {
+        console.log(error)
         if (error instanceof UnauthorizedError) {
             return res.status(StatusCodes.UNAUTHORIZED).json({
                 message: error.message,
                 status: error.statusCode
             })
         }
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "Lỗi server",
-            status: StatusCodes.BAD_REQUEST
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+            message: "unauthorized",
+            status: StatusCodes.UNAUTHORIZED
         })
     }
 };

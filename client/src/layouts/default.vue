@@ -15,8 +15,9 @@ import Footer from "@/components/base/Footer.vue";
 </script>
 
 <style lang="scss">
-.default-layout{
-  .app-main{
+.default-layout {
+  .app-main {
+    padding-top: 80px;
     min-height: calc(100vh - calc(80px + 354.8px));
   }
 }

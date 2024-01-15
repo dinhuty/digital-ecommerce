@@ -12,7 +12,6 @@ export const useAuth = () => {
     const { loggedIn, userInfo: user } = storeToRefs(useAuthStore());
     const accessToken = useStorage(ACCESS_TOKEN_KEY, "");
     const userId = useStorage(USER_ID, "");
-
     const {
         data: loginData,
         isLoading: isSignInLoading,
@@ -79,6 +78,7 @@ export const useAuth = () => {
         register,
         registerData,
         registerError,
-        isRegisterLoading
+        isRegisterLoading,
+        userId
     };
 };

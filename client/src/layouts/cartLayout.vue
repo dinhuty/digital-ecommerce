@@ -16,7 +16,9 @@ import Footer from "@/components/base/Footer.vue";
   
 <style lang="scss">
 .cart-layout {
+
     .app-main {
+        padding-top: 80px;
         min-height: calc(100vh - 80px);
     }
 }

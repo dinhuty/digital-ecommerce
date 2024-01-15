@@ -1,6 +1,6 @@
 <template>
   <div class="app-product-list tw-flex tw-flex-col tw-gap-5 tw-pb-4">
-    <BreadScrumb />
+    <BreadScrumb :name-page="getNameCategory(category as string)" :sub-navs="[{name: 'Tất cả sản phẩm' ,path: '/product'}]"/>
     <Container class="main tw-flex tw-gap-8 tw-flex-col">
       <div class="ads tw-flex tw-justify-center">
         <img :src="noen_1" alt="">
@@ -66,6 +66,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-cube";
+import { getNameCategory } from "@/utils/getNameCategory";
 import { useGetProductsByCategory } from "@/api/product/query";
 import { IParams } from "@/types/product.types";
 import VPagination from "@/components/base/VPagination.vue";

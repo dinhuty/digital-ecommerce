@@ -1,15 +1,15 @@
 <template>
-  <div class="app-header tw-bg-red">
-    <Container class="tw-h-20">
-      <header class="tw-w-100 tw-flex tw-justify-between tw-h-full tw-items-center tw-gap-8">
-        <div class="header-left tw-h-full tw-flex tw-justify-center tw-items-center">
-          <router-link to="/" class="header-logo tw-h-12 tw-w-auto">
+  <div class="app-header tw-bg-red  tw-fixed tw-w-full" :class="{ 'app-header-scrolled': isScrolled }">
+    <Container class="container tw-transition-all tw-h-20">
+      <header class="tw-w-full tw-flex tw-justify-between tw-h-full tw-items-center tw-gap-8">
+        <div class="header-left tw-h-full tw-transition-all tw-flex tw-justify-center tw-items-center">
+          <router-link to="/" class="header-logo tw-transition-all tw-h-12 tw-w-auto">
             <img :src="Logo" alt="" class="tw-w-auto tw-h-full" />
           </router-link>
         </div>
         <div class="header-search tw-flex-1">
           <input type="text" placeholder="Tìm kiếm sản phẩm"
-            class="tw-h-11 tw-rounded tw-w-full tw-px-3 focus:tw-border-none" />
+            class="tw-h-11 tw-rounded tw-transition-all tw-w-full tw-px-3 focus:tw-border-none" />
         </div>
         <div class="header-right">
           <div class="header-item tw-h-full tw-flex tw-gap-1">
@@ -61,6 +61,8 @@ import Logo from "@assets/svg/logo.svg";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { ICategory, IHeaderItem } from "@/types/category.types";
 import { useAuth } from '@composables/useAuth'
+import { useCart } from '@composables/useCart'
+
 
 const menuItems = ref<IHeaderItem[]>([
   {
@@ -86,10 +88,60 @@ const menuItems = ref<IHeaderItem[]>([
   },
 ]);
 const { loggedIn, user } = useAuth();
+const { totalItem } = useCart()
+
+const isScrolled = ref(false);
+
+// const handleScroll = () => {
+//   isScrolled.value = window.scrollY > 50;
+// };
+
+// onMounted(() => {
+//   window.addEventListener('scroll', handleScroll);
+// });
+
+// onBeforeUnmount(() => {
+//   window.removeEventListener('scroll', handleScroll);
+// });
 </script>
   
 <style scoped lang="scss">
 .app-header {
+  z-index: 9999;
+
+  &.app-header-scrolled {
+    height: 60px;
+    padding: 5px 0 !important;
+
+    .container {
+      height: 50px;
+    }
+
+    .header-logo {
+      height: 30px;
+    }
+
+    .header-right-box {
+      font-size: 11px !important;
+      line-height: 125%;
+      padding: 3px 5px;
+
+      .box-icon {
+        font-size: 13px !important;
+      }
+
+      .box-text {
+        gap: 5px;
+      }
+
+      &:hover,
+      &__login {
+        background-color: hsla(0, 0%, 100%, .2);
+        border-radius: 8px;
+      }
+    }
+  }
+
   header {
     .header-search {
       input {

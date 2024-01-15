@@ -67,6 +67,7 @@ declare global {
   const useAsyncState: typeof import('@vueuse/core')['useAsyncState']
   const useAttrs: typeof import('vue')['useAttrs']
   const useAuth: typeof import('./composables/useAuth')['useAuth']
+  const useCart: typeof import('./composables/useCart')['useCart']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useDevice: typeof import('./composables/useDevice')['useDevice']

@@ -1,7 +1,8 @@
 <template>
-  <div class="app-product-detail tw-flex tw-flex-col tw-gap-5 tw-pb-4">
-    <BreadScrumb />
-    <Container class="tw-flex tw-gap-8 tw-flex-col">
+  <div class="app-product-detail tw-flex tw-flex-col tw-gap-3 tw-pb-5">
+    <BreadScrumb v-if="product" :name-page="(product?.name as string)"
+      :sub-navs="[{ name: getNameCategory(product?.categoryName) as string, path: `/category/${product?.categoryName?.toLowerCase()}` }]" />
+    <Container class="tw-flex tw-gap-4 tw-flex-col">
       <div class="product-title">
         <p>
           {{ getNameCategory(product?.categoryName) }}
@@ -44,10 +45,14 @@
             </div>
             <div class="sold">Đã bán: 125</div>
           </div>
-          <div class="product-price">
-            <span>
+          <div class="product-price tw-flex tw-gap-4 tw-items-center">
+            <span class="base-price">
               {{ formatMoney(getPriceByVariant(productSelected?.colorId as number, productSelected.memoryId as number,
                 product?.productVariants, product?.basePrice)) }}
+            </span>
+            <span class="disc-price">
+              {{ formatMoney(getPriceByVariant(productSelected?.colorId as number, productSelected.memoryId as number,
+                product?.productVariants, product?.basePrice) * (100 + (product?.discountPercentage as number)) / 100) }}
             </span>
           </div>
           <div class="product-options">
@@ -82,22 +87,71 @@
             </h3>
             <div class="desc-coupon">
               <ul>
-                <li>Tặng phiếu mua hàng trị giá 500k</li>
-                <li>Tặng phiếu mua hàng trị giá 500k</li>
-                <li>Tặng phiếu mua hàng trị giá 500k</li>
-                <li>Tặng phiếu mua hàng trị giá 500k</li>
+                <li>
+                  <img :src="checkIcon" alt="">
+                  <span>
+                    Tặng phiếu mua hàng trị giá 500k
+                  </span>
+                </li>
+                <li>
+                  <img :src="checkIcon" alt="">
+                  <span>
+                    Trả góp tới 12 tháng không lãi suất, trả trước 0 đồng với VNPay.
+                  </span>
+                </li>
+                <li>
+                  <img :src="checkIcon" alt="">
+                  <img
+                    src="https://cdn2.cellphones.com.vn/insecure/rs:fill:70:0/q:80/plain/https://cellphones.com.vn/media/wysiwyg/momo_1.png"
+                    alt="">
+                  <span>
+                    Giảm thêm 2% tối đa 800.000đ khi thanh toán qua MoMo
+                  </span>
+                </li>
+                <li>
+                  <img :src="checkIcon" alt="">
+                  <span>
+                    Tặng phiếu mua hàng trị giá 500k
+                  </span>
+                </li>
               </ul>
+            </div>
+          </div>
+          <div class="product-btn tw-flex tw-gap-3 tw-w-full tw-py-2">
+            <div class="btn-buy--now tw-flex-1">
+              Mua ngay
+            </div>
+            <div class="btn-add" v-if="!isAddLoading" @click="handleAddToCart">
+              <img :src="cartColorIcon" alt="">
+              <span>
+                Thêm vào giỏ hàng
+              </span>
+            </div>
+            <div class="btn-add disable" v-else>
+              <!-- <img :src="cartColorIcon" alt="">
+              <span>
+                Loading ...
+              </span> -->
+              <LoadIcon />
             </div>
           </div>
           <div class="product-accept-payment">
             <h3 class="title">Thanh toán:</h3>
             <ul>
-              <li>Giảm 5% khi thanh toán với VNPay</li>
-              <li>Thanh toán khi nhận hàng</li>
+              <li>
+                <img :src="payIcon" alt="">
+                <span>
+                  Ưu đãi Youtube Premium dành cho chủ sở hữu Samsung Galaxy (Áp dụng một số sản phẩm)
+                </span>
+              </li>
+              <li>
+                <img :src="payIcon" alt="">
+                <span>
+                  Giảm ngay 150.000đ khi mua kèm SIM số đẹp Vinaphone Happy - Ưu đãi 2GB Data/ngày - Miễn phí 1000 phút
+                  nội mạng.
+                </span>
+              </li>
             </ul>
-          </div>
-          <div class="product-btn" @click="() => { console.log(productSelected) }">
-            Mua ngay
           </div>
         </div>
       </div>
@@ -138,6 +192,10 @@
 import Container from "@components/base/Container.vue";
 import BreadScrumb from "@/components/base/BreadScrumb.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
+import checkIcon from "@assets/svg/check.svg"
+import payIcon from "@assets/svg/payIcon.svg"
+import cartColorIcon from "@assets/svg/cart-color.svg"
+import LoadIcon from "@components/common/LoadIcon.vue"
 import { FreeMode, Navigation, Thumbs, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -147,15 +205,17 @@ import { SwiperModule, SwiperOptions, Swiper as SwiperClass } from "swiper/types
 import { breakpoints } from "@utils/breackpoints"
 import ProductItem from "@/components/product/ProductItem.vue";
 import Heading from "@/components/base/Heading.vue";
-import { useGetProductDetails, useListProductsSale } from "@/api/product/query";
+import { useAddProductToCartMutation, useGetProductDetails, useListProductsSale } from "@/api/product/query";
 import { formatMoney } from "@/utils/formatMoney";
 import { getNameCategory } from "@/utils/getNameCategory";
 import { getListVariant } from "@/utils/product/getListVariant"
 import { getPriceByVariant, getStockByVariant } from "@/utils/product/getPriceByVariant"
 import { IProductVariant } from "@/types/product.types";
-
+import { useAuth } from "@/composables/useAuth";
+import { useCart } from "@/composables/useCart"
 interface IProductSelected {
   id: string | null,
+  variantId?: number | null
   colorId?: number | null,
   memoryId?: number | null
 }
@@ -169,7 +229,9 @@ const modules: SwiperModule[] = [FreeMode, Navigation, Thumbs, Pagination];
 const {
   params: { slug },
 } = useRoute();
-
+const router = useRouter()
+const { userId, loggedIn } = useAuth()
+const { addToCart, isAddLoading, isAddError } = useCart()
 const { data: product, isFetching } = useGetProductDetails(slug as string)
 const { data: products } = useListProductsSale(10)
 const productSelected = reactive<IProductSelected>({
@@ -191,7 +253,23 @@ const handleUpdateProductSelected = (colorId?: number, memoryId?: number) => {
   }
   if (memoryId) {
     productSelected.memoryId = memoryId
-
+  }
+}
+const handleAddToCart = async () => {
+  if (!loggedIn.value) {
+    router.push("/login")
+  }
+  if (product.value?.productVariants) {
+    const variant = product.value?.productVariants?.find((variant) => {
+      return (variant.color?.id === productSelected.colorId &&
+        variant.memory?.id === productSelected.memoryId
+      )
+    })
+    if (variant?.id) {
+      await addToCart({ userId: userId.value, productVariantId: variant?.id })
+    }
+  } else {
+    alert("Error ..")
   }
 }
 onMounted(() => {
@@ -200,7 +278,6 @@ onMounted(() => {
 
 watch(product, () => {
   setProductSelectedValues();
-  console.log('wtd')
 });
 
 </script>
@@ -215,14 +292,13 @@ watch(product, () => {
   .product-title {
     font-size: 20px;
     font-weight: 600;
-    line-height: 30px;
-    padding-bottom: 16px;
+    padding-bottom: 10px;
     border-bottom: 1px solid $border-section;
   }
 
   .product-main {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     width: 100%;
     flex-direction: column;
 
@@ -233,11 +309,11 @@ watch(product, () => {
     .product-swiper {
       user-select: none;
       width: 100%;
-      background-color: $light-primary;
+      // background-color: $light-primary;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 16px;
       cursor: pointer;
       border-radius: 8px;
       overflow: hidden;
@@ -259,12 +335,14 @@ watch(product, () => {
         font-size: 20px;
         border-radius: 10px;
         font-weight: 600;
-        background-color: $light-primary;
+        background-color: rgba(255, 255, 255, 0.163);
         color: $gray;
         box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
         &:hover {
           color: red !important;
+          background-color: rgba(255, 255, 255, 0.326);
+
         }
       }
 
@@ -285,22 +363,26 @@ watch(product, () => {
         display: flex;
         align-items: center;
         max-width: 100%;
+
+        .swiper-slide {
+          background-color: $white;
+
+        }
+
         // width: 100%;
 
         // .swiper-wrapper {
         //     display: flex;
         //     justify-content: center !important;
         // }
-        .swiper-slide-thumb-active {
-          background: #0000002d;
-        }
+
 
         .swiper-img {
           cursor: pointer;
-          height: 80px;
-          width: 80px !important;
+          height: 60px;
+          width: 60px !important;
           padding: 5px;
-          border-radius: 8px;
+          border-radius: 4px;
           overflow: hidden;
           border: 1px solid $border-section;
 
@@ -309,6 +391,11 @@ watch(product, () => {
             width: 100%;
             object-fit: contain;
           }
+        }
+
+        .swiper-slide-thumb-active {
+          border: 1px solid $red;
+
         }
       }
     }
@@ -354,10 +441,21 @@ watch(product, () => {
     }
 
     .product-price {
-      color: red;
-      font-size: 24px;
-      font-weight: 700;
-      border-radius: 8px;
+      padding: 5px;
+
+      .base-price {
+        color: red;
+        font-size: 22px;
+        font-weight: 700;
+        border-radius: 8px;
+      }
+
+      .disc-price {
+        color: $gray;
+        text-decoration: line-through;
+        // font-weight: 400;
+        font-size: 16px;
+      }
     }
 
     .product-options {
@@ -434,10 +532,11 @@ watch(product, () => {
 
     .product-benefit {
       display: flex;
-      gap: 16px;
+      gap: 5px;
       flex-direction: column;
-      background-color: $light-blue;
-      padding: 20px;
+      background-color: $white;
+      border: 1px solid $border-section;
+      padding: 15px 10px;
       border-radius: 10px;
       position: relative;
 
@@ -449,51 +548,132 @@ watch(product, () => {
       }
 
       .title {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
+        text-transform: uppercase;
+        color: $red;
       }
 
       .desc-coupon {
         ul {
+          font-size: 12px;
           display: flex;
           flex-direction: column;
           gap: 5px;
+
+          li {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+
+            img {
+
+              height: 13px;
+              width: 13px;
+
+              svg {
+                height: 100%;
+                width: 100%;
+              }
+            }
+          }
         }
       }
     }
 
     .product-accept-payment {
-      border: 1px solid $gray;
       padding: 10px 20px;
-      border-radius: 8px;
-      background-color: $light-bg-secondary;
+      border-radius: 4px;
+      background-color: $light-primary;
 
       .title {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
-        line-height: 150%;
+        line-height: 120%;
+        text-transform: uppercase;
       }
 
       ul {
         li {
           line-height: 150%;
           font-size: 14px;
+
+          img {
+
+            height: 13px;
+            width: 13px;
+
+            svg {
+              height: 100%;
+              width: 100%;
+            }
+          }
+
+          span {
+            font-size: 12px;
+            color: $black;
+            font-style: italic;
+          }
         }
       }
     }
 
     .product-btn {
-      background-color: $red;
-      color: $white;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 22px;
-      cursor: pointer;
-      border-radius: 8px;
-      text-align: center;
+      .btn-buy--now {
+        background-color: $red;
+        color: $white;
+        font-size: 16px;
+        font-weight: 500;
+        padding: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        text-align: center;
 
-      &:hover {
-        opacity: 0.8;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+
+      .btn-add {
+        cursor: pointer;
+        padding: 5px;
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        background-color: rgba(254, 1, 1, 0.060);
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid $red;
+        gap: 5px;
+        width: 140px;
+        height: 58px;
+        transition: all .3s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+        &.disable {
+          opacity: .5;
+        }
+
+        span {
+          color: red;
+          font-size: 13px;
+          font-weight: 500;
+
+        }
+
+        img {
+          height: 20px;
+          width: 20px;
+
+          svg {
+            height: 100%;
+            width: 100%;
+          }
+        }
+
+        &:hover {
+          background-color: rgba(254, 1, 1, 0.034);
+        }
       }
     }
   }

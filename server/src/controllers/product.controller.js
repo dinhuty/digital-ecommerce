@@ -148,7 +148,7 @@ const getProductBySlug = async (req, res, next) => {
                 {
                     model: ProductVariant,
                     as: 'productVariants',
-                    attributes: ['stock', 'price'],
+                    attributes: ['id','stock', 'price'],
                     include: [
                         {
                             model: Color,
