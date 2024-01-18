@@ -26,6 +26,11 @@ const useCartStore = defineStore({
             }
         },
 
+        // When a user not logged
+        addCartLocal(productVariantId: string | number) {
+
+        },
+
         async removeFromCart(cartItemId: number) {
             const userId = localStorage.getItem(USER_ID);
             if (!userId || !cartItemId) {

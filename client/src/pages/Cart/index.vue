@@ -2,14 +2,12 @@
   <div class="app-cart tw-flex tw-flex-col tw-gap-5 tw-pb-4">
     <BreadScrumb name-page="Giỏ hàng" />
     <Container class="cart-section tw-flex tw-gap-8 tw-flex-col">
-      <div class="cart-title">
-        Giỏ hàng của bạn
-      </div>
+      <div class="cart-title">Giỏ hàng của bạn</div>
       <div class="cart-main tw-flex tw-flex-col tw-gap-5 tw-pb-20" v-if="carts.length > 0">
         <div class="cart-product tw-flex tw-justify-between tw-gap-3" v-for="cartItem in carts" :key="cartItem.id">
           <div class="cart-product__left tw-flex tw-gap-3">
             <div class="product-img">
-              <img class="tw-w-full tw-h-full tw-object-cover" :src="cartItem.productVariant.product?.thumbUrl" alt="">
+              <img class="tw-w-full tw-h-full tw-object-cover" :src="cartItem.productVariant.product?.thumbUrl" alt="" />
             </div>
             <div class="product-desc tw-py-2 tw-flex tw-flex-col tw-justify-between">
               <router-link :to="`/product/${cartItem.productVariant.product?.slug}`"
@@ -18,19 +16,18 @@
               </router-link>
               <div class="product-desc--option tw-justify-self-start">
                 <span>
-                  {{ cartItem.productVariant.memory?.ram }}/{{ cartItem.productVariant.memory?.rom }}
+                  {{ cartItem.productVariant.memory?.ram }}/{{
+                    cartItem.productVariant.memory?.rom
+                  }}
                 </span>
-                <span>
-                  -
-                </span>
+                <span> - </span>
                 <span>
                   {{ cartItem.productVariant.color?.name }}
                 </span>
               </div>
-              <div class="product-desc__price tw-flex tw-gap-2 ">
+              <div class="product-desc__price tw-flex tw-gap-2">
                 <div class="product-desc__price--show">
                   {{ formatMoney(cartItem.productVariant.price) }}
-
                 </div>
                 <div class="product-desc__price--throw">
                   {{
@@ -39,7 +36,6 @@
                 </div>
               </div>
             </div>
-
           </div>
           <div class="cart-product__right tw-flex tw-flex-col tw-justify-between tw-items-end">
             <div class="remove-btn hover:tw-opacity-75 tw-transition-all" @click="removeFromCart(cartItem.id)">
@@ -72,7 +68,7 @@
       </div>
       <div class="cart-main tw-py-20 tw-flex tw-gap-3 tw-flex-col tw-items-center tw-justify-center" v-else>
         <div class="nothing-in-cart">
-          <img src="https://cdn2.cellphones.com.vn/x,webp/media/cart/Cart-empty-v2.png" alt="">
+          <img src="https://cdn2.cellphones.com.vn/x,webp/media/cart/Cart-empty-v2.png" alt="" />
         </div>
         <div class="sub-text tw-text-center">
           <span>Giỏ hàng của bạn đang trống.</span>
@@ -83,21 +79,15 @@
       <div id="stickyBottomBar" class="tw-fixed">
         <div v-if="carts.length > 0" class="price-info tw-flex tw-justify-between">
           <div class="price-term tw-flex tw-flex-col tw-gap-2">
-            <p class="tw-block">
-              Tổng tiền sản phẩm:
-            </p>
+            <p class="tw-block">Tổng tiền sản phẩm:</p>
             <span class="tw-block">
               {{ formatMoney(getTotalAmount(carts)) }}
             </span>
           </div>
           <router-link to="/cart/checkout"
             class="btn-checkout tw-self-start tw-justify-self-start hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
-            <span>
-              Mua ngay
-            </span>
-            <span>
-              ({{ totalItem }})
-            </span>
+            <span> Mua ngay </span>
+            <span> ({{ totalItem }}) </span>
           </router-link>
         </div>
         <router-link v-else to="/" class="go-back tw-transition-all hover:tw-opacity-75">
@@ -112,28 +102,29 @@
 import Container from "@components/base/Container.vue";
 import BreadScrumb from "@/components/base/BreadScrumb.vue";
 import { useGetUserCarts } from "@/api/product/query";
-import { useAuth } from "@/composables/useAuth"
+import { useAuth } from "@/composables/useAuth";
 import { formatMoney } from "@/utils/formatMoney";
-import { getRealPrice } from "@/utils/product/getPriceAfterDiscount"
+import { getRealPrice } from "@/utils/product/getPriceAfterDiscount";
 import { IUserCarts } from "@/types/cart.types";
-import { useCart } from "@/composables/useCart"
-import { getTotalAmount } from "@/utils/product/getTotalPrice"
-const { userId } = useAuth()
-const { carts,
+import { useCart } from "@/composables/useCart";
+import { getTotalAmount } from "@/utils/product/getTotalPrice";
+const { userId } = useAuth();
+const {
+  carts,
   addToCart,
   isLoadingCart,
   totalItem,
   getUserCarts,
   increaseQuantity,
   removeFromCart,
-  decreaseQuantity } = useCart()
+  decreaseQuantity,
+} = useCart();
 
 onMounted(async () => {
   if (userId) {
-    await getUserCarts(userId.value)
+    await getUserCarts(userId.value);
   }
-})
-
+});
 </script>
 <route lang="yaml">
   name: Giỏ hàng
@@ -246,7 +237,7 @@ onMounted(async () => {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     z-index: 99;
-    box-shadow: 0 -4px 20px -1px rgba(40, 124, 234, .15);
+    box-shadow: 0 -4px 20px -1px rgba(40, 124, 234, 0.15);
     left: 50%;
     transform: translateX(-50%);
     bottom: 0;
@@ -262,7 +253,6 @@ onMounted(async () => {
       background-color: $red;
       width: 100%;
       border-radius: 5px;
-
     }
 
     .price-info {
@@ -278,7 +268,6 @@ onMounted(async () => {
           font-weight: 500;
           color: $red;
         }
-
       }
 
       .btn-checkout {

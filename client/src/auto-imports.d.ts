@@ -73,6 +73,7 @@ declare global {
   const useDevice: typeof import('./composables/useDevice')['useDevice']
   const useLink: typeof import('vue-router')['useLink']
   const useLoading: typeof import('./composables/useLoading')['default']
+  const useOrder: typeof import('./composables/useOrder')['useOrder']
   const useProductTest: typeof import('./composables/useProductTest')['useProductTest']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']

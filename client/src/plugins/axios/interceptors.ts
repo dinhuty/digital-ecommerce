@@ -5,7 +5,13 @@ import {
   AxiosRequestConfig,
   AxiosInstance,
 } from "axios";
-import { ACCESS_TOKEN_KEY } from "@/utils/constants";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_ID } from "@/utils/constants";
+import { getNewToken } from "@api/auth/auth"
+import { useStorage } from "@vueuse/core";
+interface AxiosOriginalRequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+}
+
 
 export default function interceptors(axios: AxiosInstance) {
 
@@ -27,45 +33,33 @@ export default function interceptors(axios: AxiosInstance) {
   axios.interceptors.response.use(
     (response: AxiosResponse) => response.data,
     async (error: AxiosError) => {
-      // const originalConfig: any = error.config;
+      const originalConfig = error.config;
 
       if (error.response) {
         if (error.response.status === 401) {
-          // refreshToken(originalConfig, axios); // enable if app's required refresh token
+          const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+          const userId = localStorage.getItem(USER_ID);
+          try {
+            const res = await getNewToken(refreshToken as string, userId as string)
+            const newAccessToken = res.accessToken
+            if (originalConfig?.headers) {
+              localStorage.setItem(ACCESS_TOKEN_KEY, newAccessToken)
+              originalConfig.headers["authorization"] = `Bearer ${newAccessToken}`;
+            }
+            if (originalConfig) {
+              return axios(originalConfig)
+            }
+          } catch (error) {
+            // redirectLogin
+            return Promise.reject(error);
+          }
         }
 
         return Promise.reject(error.response.data);
       }
+      return Promise.reject(error);
+
     }
   );
 }
 
-// const refreshToken = async (
-//   originalConfig: AxiosRequestConfig<any>,
-//   axios: AxiosStatic
-// ) => {
-//   if (isRefreshing) {
-//     return new Promise((resolve, reject) => {
-//       failedQueue.push({ resolve, reject });
-//     });
-//   }
-
-//   isRefreshing = true;
-
-//   try {
-//     const access_token = "";
-
-//     if (originalConfig?.headers) {
-//       originalConfig.headers["authorization"] = `Bearer ${access_token}`;
-//     }
-
-//     processQueue(null, access_token);
-
-//     return axios(originalConfig);
-//   } catch (error) {
-//     processQueue(error, null);
-//     return Promise.reject(error);
-//   } finally {
-//     isRefreshing = false;
-//   }
-// };

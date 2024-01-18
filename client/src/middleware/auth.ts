@@ -23,9 +23,11 @@ export const auth = async (
                 }
             } catch (error) {
                 localStorage.removeItem(ACCESS_TOKEN_KEY);
+                console.log("Lỗi get")
                 next(`/login?redirect=${to.path}`);
             }
         } else {
+            console.log("Lỗi else", to)
             next(`/login?redirect=${to.path}`);
         }
     } else {

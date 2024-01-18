@@ -54,11 +54,11 @@ const login = async (req, res) => {
         const { accessToken, refreshToken } = jwtCreate(user.id)
 
         //Tìm và sửa refreshToken
-        await User.update({ refresh_token: refreshToken }, { where: { email } })
+        await User.update({ refreshToken: refreshToken }, { where: { email } })
 
         return res.status(StatusCodes.OK).json({
             accessToken,
-            refresh_token: refreshToken,
+            refreshToken: refreshToken,
             user: {
                 id: user.id,
                 username: user.userName,
@@ -97,27 +97,28 @@ const refreshToken = async (req, res) => {
         const authorization = (req.headers.authorization ||
             req.headers.Authorization)
         if (!authorization) {
-            throw new UnauthorizedError('Không xác thực')
+            throw new NotFoundError('Không xác thực')
         }
         const accessTokenFromHeader = authorization.split(' ')[1]
 
         if (!accessTokenFromHeader) {
-            throw new UnauthorizedError('Không xác thực')
+            throw new NotFoundError('Không xác thực')
         }
         const decoded = jwtDecodeToken(accessTokenFromHeader);
         if (!decoded) {
-            throw new UnauthorizedError('AccessToken không hợp lệ')
+            throw new ConflictError('AccessToken không hợp lệ')
         }
-        const { refreshToken, email } = req.body;
+        const { refreshToken, userId } = req.body;
+    
         if (!refreshToken) {
             throw new NotFoundError('Không tìm thấy RefreshToken')
         }
-        const user = await User.findOne({ where: { email } })
+        const user = await User.findOne({ where: { id: userId } })
         if (!user) {
             throw new NotFoundError('Không tìm thấy user')
         }
-        if (user.refresh_token !== refreshToken) {
-            throw new UnauthorizedError('RefreshToken không hợp lệ')
+        if (user.refreshToken !== refreshToken) {
+            throw new ConflictError('RefreshToken không hợp lệ')
         }
         const { accessToken } = jwtCreate(user.id)
         return res.status(StatusCodes.CREATED).json({
@@ -129,12 +130,6 @@ const refreshToken = async (req, res) => {
     } catch (error) {
         if (error instanceof BadRequestError) {
             return res.status(StatusCodes.BAD_REQUEST).json({
-                message: error.message,
-                status: error.statusCode
-            })
-        }
-        if (error instanceof UnauthorizedError) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({
                 message: error.message,
                 status: error.statusCode
             })

@@ -25,6 +25,11 @@ export interface IRegisterBody {
   // enableEmailNotifications: boolean;
 }
 
+export interface INewAccessToken {
+  accessToken: string,
+  message?: string,
+  status?: number
+}
 export interface Department {
   name: string;
 }

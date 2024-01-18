@@ -10,7 +10,7 @@ import {
 } from "@/types/auth.types";
 import { IUser } from "@/types/user.types";
 
-const auth = () => ({
+const address = () => ({
     login(body: ILoginBody) {
         return $axios.post<ILoginResponse, ILoginResponse>("/auth/login", body);
     },
@@ -31,4 +31,4 @@ const auth = () => ({
     },
 });
 
-export const { login, register, getUser, getNewToken } = auth();
+export const { login, register, getUser, getNewToken } = address();
