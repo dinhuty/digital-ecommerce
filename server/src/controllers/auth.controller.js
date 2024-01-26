@@ -1,11 +1,13 @@
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
 const { User } = require('../database/models')
-const { comparePassword, jwtCreate, jwtVerify } = require('../utils')
+const { comparePassword, jwtCreate, jwtVerify, hashPassword } = require('../utils')
 const { jwtDecodeToken } = require('../utils/jwt')
 const { NotFoundError,
     BadRequestError,
     UnauthorizedError,
     ConflictError } = require('../errors')
+const mailer = require('../services/mailer')
+
 
 const register = async (req, res) => {
     try {
@@ -109,7 +111,7 @@ const refreshToken = async (req, res) => {
             throw new ConflictError('AccessToken không hợp lệ')
         }
         const { refreshToken, userId } = req.body;
-    
+
         if (!refreshToken) {
             throw new NotFoundError('Không tìm thấy RefreshToken')
         }
@@ -167,9 +169,113 @@ const profile = async (req, res) => {
     }
 }
 
+const forgotPassword = async (req, res, next) => {
+    try {
+        const email = req.body.email
+        if (!email) {
+            throw new NotFoundError("Cung cấp tài khoản email")
+        }
+        const user = await User.findOne({ where: { email } })
+        if (!user) {
+            throw new NotFoundError("Email chưa được đăng ký")
+        }
+        const { resetPasswordToken } = jwtCreate(user.id)
+
+        const resetURL = `<h1>Ban co 5phut de thay doi mat khau <a href="http://localhost:3000/api/auth/reset-password/${user.id}/${refreshToken}">Tao mat khau moi</a></h1>`
+        mailer(email, resetURL)
+        console.log(user.id)
+        console.log(resetPasswordToken)
+
+        res.status(StatusCodes.OK).json({
+            message: "Kiểm tra email của bạn để đặt lại mật khẩu",
+            status: StatusCodes.OK
+        })
+    } catch (error) {
+        console.log(error)
+        if (error instanceof NotFoundError) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: error.message,
+                status: error.statusCode
+            })
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Lỗi server",
+            status: StatusCodes.BAD_REQUEST
+        })
+    }
+}
+const resetPassword = async (req, res, next) => {
+    try {
+        const { userId, token } = req.params
+        console.log(userId, token)
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        })
+        if (!user) {
+            throw new NotFoundError("Không tìm thấy user")
+        }
+
+        const data = jwtVerify(token)
+        if (!data) {
+            throw new UnauthorizedError("Liên kết đã hết hạn")
+        }
+
+        const { password } = await req.body
+        user.password = await hashPassword(password)
+        console.log(password)
+        const saveNewPassword = await user.save()
+
+        res.status(StatusCodes.OK).json({
+            message: "Đổi mk thành công",
+            status: StatusCodes.OK
+        })
+    } catch (error) {
+        console.log(error)
+        if (error instanceof UnauthorizedError) {
+            return res.render('error')
+        }
+        res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Đổi mật khẩu không thành công"
+        })
+    }
+}
+
+const resetPasswordForm = async (req, res, next) => {
+    try {
+        const { userId, token } = req.params
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        })
+        if (!user) {
+            throw new BadRequestError("Không tìm thấy user")
+        }
+
+        const data = jwtVerify(token)
+        if (!data) {
+            throw new UnauthorizedError("Liên kết đã hết hạn")
+        }
+        res.render("index", { userId, token })
+    } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            return res.render('error')
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Lỗi server",
+            status: StatusCodes.BAD_REQUEST
+        })
+    }
+}
+
 module.exports = {
     register,
     login,
     refreshToken,
-    profile
+    profile,
+    resetPassword,
+    resetPasswordForm,
+    forgotPassword
 }

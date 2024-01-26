@@ -1,4 +1,4 @@
-import { loginMutation, registerMutation } from "@/api/auth/query";
+import { loginMutation, registerMutation, forgotPasswordMutation } from "@/api/auth/query";
 import useAuthStore from "@/store/auth";
 import { ACCESS_TOKEN_KEY, USER_ID, REFRESH_TOKEN_KEY } from "@/utils/constants";
 import { storeToRefs } from "pinia";
@@ -68,6 +68,21 @@ export const useAuth = () => {
         router.push("/login");
     };
 
+    const {
+        data: forgotPasswordData,
+        isLoading: isForgotPasswordLoading,
+        error: forgotPasswordError,
+        mutateAsync: forgotPasswordMutateAsync,
+    } = forgotPasswordMutation();
+
+    const forgotPassword = async (email: string) => {
+        start()
+        try {
+            await forgotPasswordMutateAsync(email)
+        } finally {
+            finish()
+        }
+    }
     return {
         loggedIn,
         user,
@@ -81,6 +96,9 @@ export const useAuth = () => {
         registerData,
         registerError,
         isRegisterLoading,
-        userId
+        userId,
+        forgotPassword,
+        forgotPasswordData,
+        forgotPasswordError
     };
 };

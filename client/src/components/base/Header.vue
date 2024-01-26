@@ -1,7 +1,7 @@
 <template>
   <div class="app-header tw-bg-red  tw-fixed tw-w-full" :class="{ 'app-header-scrolled': isScrolled }">
     <Container class="container tw-transition-all tw-h-20">
-      <header class="tw-w-full tw-flex tw-justify-between tw-h-full tw-items-center tw-gap-8">
+      <header class="tw-w-full tw-flex tw-justify-between tw-h-full tw-items-center tw-gap-9">
         <div class="header-left tw-h-full tw-transition-all tw-flex tw-justify-center tw-items-center">
           <router-link to="/" class="header-logo tw-transition-all tw-h-12 tw-w-auto">
             <img :src="Logo" alt="" class="tw-w-auto tw-h-full" />
@@ -12,19 +12,31 @@
             class="tw-h-11 tw-rounded tw-transition-all tw-w-full tw-px-3 focus:tw-border-none" />
         </div>
         <div class="header-right">
-          <div class="header-item tw-h-full tw-flex tw-gap-1">
-            <router-link to="/cart"
-              class="header-right-box tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white"
-              v-for="item in menuItems" :key="item.value">
+          <div class="header-item tw-h-full tw-flex tw-gap-2">
+            <div class="header-right-box tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white">
               <div class="box-icon">
-                <font-awesome-icon :icon="item.icon" />
+                <font-awesome-icon icon="headset" />
               </div>
               <div class="box-text tw-flex tw-flex-col tw-font-normal">
                 <span>
-                  {{ item.fText }}
+                  Hotline
                 </span>
                 <span>
-                  {{ item.lText }}
+                  1900.9999
+                </span>
+              </div>
+            </div>
+            <router-link to="/cart"
+              class="header-right-box tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white">
+              <div class="box-icon">
+                <font-awesome-icon icon="cart-plus" />
+              </div>
+              <div class="box-text tw-flex tw-flex-col tw-font-normal">
+                <span>
+                  Giỏ
+                </span>
+                <span>
+                  hàng
                 </span>
               </div>
             </router-link>

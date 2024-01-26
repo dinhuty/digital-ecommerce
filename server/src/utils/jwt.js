@@ -5,13 +5,16 @@ const jwtCreate = (id) => {
         const accessToken = jwt.sign({ id }, process.env.ACCESS_TOKEN_PRIVATE_KEY, {
             expiresIn: "15m",
         });
+        const resetPasswordToken = jwt.sign({ id }, process.env.ACCESS_TOKEN_PRIVATE_KEY, {
+            expiresIn: "15m",
+        });
         const refreshToken = jwt.sign(
             { id },
             process.env.REFRESH_TOKEN_PRIVATE_KEY,
             { expiresIn: "15d" }
         );
 
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken, resetPasswordToken };
     } catch (e) {
         console.log("Error")
         return null

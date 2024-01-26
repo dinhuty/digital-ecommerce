@@ -14,15 +14,15 @@ const auth = () => ({
     login(body: ILoginBody) {
         return $axios.post<ILoginResponse, ILoginResponse>("/auth/login", body);
     },
-
     register(body: IRegisterBody) {
         return $axios.post("/auth/register", body);
     },
-
+    forgotPassword(email: string) {
+        return $axios.post("/auth/forgot-password", { email });
+    },
     getUser(userId: string | number) {
         return $axios.get<unknown, IUser>(`/auth/profile/${userId}`);
     },
-
     getNewToken(refreshToken: string, userId: string | number) {
         return $axios.post<unknown, INewAccessToken>(`/auth/refresh-token`, {
             refreshToken,
@@ -31,4 +31,4 @@ const auth = () => ({
     },
 });
 
-export const { login, register, getUser, getNewToken } = auth();
+export const { login, register, forgotPassword, getUser, getNewToken } = auth();

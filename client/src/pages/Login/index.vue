@@ -20,9 +20,10 @@
               <MyInput placeholder="Nhập mật khẩu" type="password" v-model="loginData.password" @keyup.enter="loginData"
                 name="password" />
             </div>
-            <div class="forget-pass tw-self-end tw-italic tw-text-gray-500 tw-cursor-pointer">
+            <router-link to="/forgot-password"
+              class="forget-pass tw-self-end hover:tw-text-red tw-italic tw-text-gray-500 tw-cursor-pointer">
               Quên mật khẩu
-            </div>
+            </router-link>
           </div>
           <button class="btn-form__submit tw-text-center hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
             Đăng nhập
