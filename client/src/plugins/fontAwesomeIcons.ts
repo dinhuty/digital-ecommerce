@@ -10,6 +10,8 @@ import {
     faStar,
     faMobile,
     faLaptop,
+    faCalendarDays
+
 } from '@fortawesome/free-solid-svg-icons'
 
 import {

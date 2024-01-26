@@ -113,8 +113,11 @@ const { data: products } = useListProductsSale(10)
 </route>
 <style lang="scss" >
 .app-home {
+
   .block-top-home {
+
     .menu-main {
+      z-index: 10;
       width: 230px;
       border-radius: 8px;
       box-shadow: $box-shadow-section;

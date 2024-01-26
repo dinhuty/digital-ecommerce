@@ -1,15 +1,18 @@
 <template>
   <div class="menu-tree tw-flex tw-flex-col tw-w-full tw-overflow-hidden">
     <router-link :to="(item.pathName as string)"
-      class="menu-item hover:tw-bg-gray-300 tw-overflow-hidden tw-transition-all tw-flex tw-px-3 tw-py-3 tw-cursor-pointer tw-justify-between"
+      class="menu-item tw-overflow-hidden tw-transition-all tw-flex tw-px-3 tw-py-3 tw-cursor-pointer tw-justify-between"
       v-for="item in menuItems" :key="item.id">
-      <div class="item-left tw-flex tw-gap-3 tw-flex-1">
+      <div class="item-left tw-flex tw-gap-3 tw-flex-1" v-if="item.icon">
         <div class="icon tw-w-5 tw-h-5">
           <img :src="item.icon" alt="" class="tw-w-full">
         </div>
-        <div class="label tw-flex-1">{{ item.label }}</div>
+        <span class="label tw-flex-1">{{ item.label }}</span>
       </div>
-      <div class="item-right tw-w-5 tw-h-5" v-if="item.navIcon">
+      <div v-else class="item-left tw-flex tw-gap-3 tw-flex-1">
+        <span class="label tw-flex-1">{{ item.label }}</span>
+      </div>
+      <div class="item-right tw-w-4 tw-h-4" v-if="item.navIcon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -25,15 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import cellPhoneSvg from "@/assets/svg/categories/Category-CellPhone.svg";
-import watchSvg from "@/assets/svg/categories/Category-SmartWatch.svg";
-import cameraSvg from "@/assets/svg/categories/Category-Camera.svg";
-import gamePadSvg from "@/assets/svg/categories/Category-Gamepad.svg";
-import headPhoneSvg from "@/assets/svg/categories/Category-Headphone.svg";
-import computerSvg from "@/assets/svg/categories/Category-Computer.svg";
+import cellPhoneSvg from "@/assets/svg/categories/mobile.svg";
+import watchSvg from "@/assets/svg/categories/watch.svg";
+import cameraSvg from "@/assets/svg/categories/camera.svg";
+import gamePadSvg from "@/assets/svg/categories/game-pad.svg";
+import headPhoneSvg from "@/assets/svg/categories/serial-port.svg";
+import computerSvg from "@/assets/svg/categories/computer.svg";
 import iconDelivery from "@assets/svg/icon-delivery.svg"
-import iconSecure from "@assets/svg/icon-secure.svg"
-import iconStore from "@/assets/svg/icon-store.svg"
+import iconSecure from "@assets/svg/categories/secure.svg"
+import iconStore from "@/assets/svg/categories/map.svg"
 interface IMenuItem {
   id: number;
   icon?: string;
@@ -45,7 +48,7 @@ interface IMenuItem {
 const menuItems = ref<IMenuItem[]>([
   {
     id: 0,
-    icon: cellPhoneSvg,
+    // icon: cellPhoneSvg,
     label: "Tất cả sản phẩm",
     navIcon: true,
     pathName: '/product'
@@ -122,6 +125,21 @@ export default {
   .menu-item {
     font-size: 13px;
     font-weight: 600;
+
+
+    &:hover {
+      color: $red;
+      background-color: $bg-light-gray;
+
+      img {
+        filter: invert(37%) sepia(93%) saturate(7471%) hue-rotate(355deg) brightness(76%) contrast(135%);
+      }
+
+      svg {
+        fill: $red !important;
+      }
+
+    }
   }
 }
 </style>

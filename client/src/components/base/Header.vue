@@ -40,7 +40,7 @@
                 </span>
               </div>
             </router-link>
-            <router-link v-if="loggedIn" to="/profile"
+            <router-link v-if="loggedIn" to="/account"
               class="header-right-box header-right-box__login tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white">
               <div class="box-icon">
                 <font-awesome-icon icon="fa-regular fa-user" />
@@ -75,46 +75,11 @@ import { ICategory, IHeaderItem } from "@/types/category.types";
 import { useAuth } from '@composables/useAuth'
 import { useCart } from '@composables/useCart'
 
-
-const menuItems = ref<IHeaderItem[]>([
-  {
-    value: "help",
-    icon: "headset",
-    fText: "Hotline",
-    lText: "1900.9999",
-    path: "/",
-  },
-  {
-    value: "order",
-    icon: "calendar",
-    fText: "Tra cứu",
-    lText: "đơn hàng",
-    path: "/",
-  },
-  {
-    value: "cart",
-    icon: "cart-plus",
-    fText: "Giỏ",
-    lText: "hàng",
-    path: "/",
-  },
-]);
 const { loggedIn, user } = useAuth();
 const { totalItem } = useCart()
 
 const isScrolled = ref(false);
 
-// const handleScroll = () => {
-//   isScrolled.value = window.scrollY > 50;
-// };
-
-// onMounted(() => {
-//   window.addEventListener('scroll', handleScroll);
-// });
-
-// onBeforeUnmount(() => {
-//   window.removeEventListener('scroll', handleScroll);
-// });
 </script>
   
 <style scoped lang="scss">
