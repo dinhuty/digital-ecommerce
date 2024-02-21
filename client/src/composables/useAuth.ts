@@ -48,10 +48,11 @@ export const useAuth = () => {
         mutateAsync: registerMutateAsync,
     } = registerMutation();
 
-    const register = async ({ email, password, confirmPassword }: IRegisterBody) => {
+    const register = async ({ userName, email, password, confirmPassword }: IRegisterBody) => {
         start();
         try {
             await registerMutateAsync({
+                userName,
                 email,
                 password,
                 confirmPassword

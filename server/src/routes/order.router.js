@@ -8,9 +8,12 @@ router.post('/create',
     auth,
     orderController.createOrder
 )
-router.get('/:userId',
+router.get('/list',
     auth,
     orderController.getUserOrders
+)
+router.post('/create-order-guest',
+    orderController.createOrderGuest
 )
 
 module.exports = router

@@ -10,7 +10,8 @@ import {
     fetchProductOfCategory,
     fetchBase,
     addProductToCart,
-    fetchUserCarts
+    fetchUserCarts,
+    fetchProductVariant
 } from "./product";
 import { IParams, } from "@/types/product.types";
 
@@ -55,7 +56,14 @@ export const useGetProductDetails = (slug: string) => {
     );
 };
 
-
+export const useGetProductVariant = (productVariantId: string) => {
+    return useQuery(["product-variant", productVariantId], () =>
+        fetchProductVariant(productVariantId),
+        {
+            refetchOnWindowFocus: false
+        }
+    );
+};
 export const useGetProductsByCategory = (
     categoryName: string,
     params?: Ref<IParams>,

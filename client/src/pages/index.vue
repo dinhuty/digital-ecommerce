@@ -5,29 +5,50 @@
         <div class="menu-main">
           <Menu />
         </div>
-        <div class="home-slider tw-rounded-lg tw-flex tw-justify-center tw-items-center">
-          <swiper :modules="modules" :slides-per-view="1" :space-between="10" :pagination="{ clickable: true }"
-            :navigation="true" id="swiper-slider">
-            <swiper-slide class="swiper-item tw-overflow-hidden" v-for="n in 6" :key="n">
-              <img :src="banner" alt="" />
-            </swiper-slide>
-          </swiper>
+        <div class="home-slider tw-relative tw-rounded-lg">
+          <div class="home-slider-main">
+            <swiper :modules="modules" :slides-per-view="1" :space-between="10" :pagination="{ clickable: true }"
+              :navigation="true" id="swiper-slider">
+              <swiper-slide class="swiper-item tw-overflow-hidden" v-for="n in 6" :key="n">
+                <img :src="banner" alt="" />
+              </swiper-slide>
+            </swiper>
+          </div>
+          <div class="home-slider__bottom">
+            <div class="home-slider__bottom-item">
+              <p>Apple iPhone</p>
+              <span>Giảm đến 14%</span>
+            </div>
+            <div class="home-slider__bottom-item">
+              <p>Máy tính bảng</p>
+              <span>Giảm đến 38%</span>
+            </div>
+            <div class="home-slider__bottom-item">
+              <p>Phụ kiện điện thoại</p>
+              <span>Giảm đến 20%</span>
+            </div>
+            <div class="home-slider__bottom-item">
+              <p>Samsung S24 ultra</p>
+              <span>Giảm đến 15%</span>
+            </div>
+          </div>
+        </div>
+        <div class="home__right-banner">
+          <router-link class="banner-item" to="/">
+            <img :src="banner1" alt="banner1">
+          </router-link>
+          <router-link class="banner-item" to="/">
+            <img :src="banner2" alt="banner2">
+          </router-link>
+          <router-link class="banner-item" to="/">
+            <img :src="banner3" alt="banner3">
+          </router-link>
         </div>
       </div>
-      <div
-        class="home-category tw-bg-white tw-rounded-xl tw-overflow-hidden tw-flex tw-flex-col tw-gap-6 tw-px-4 tw-py-5">
-        <Heading toptitle="Categories" :allowViewAll="false" title="Categories" />
-        <div class="list-category">
-          <Categories />
-        </div>
+      <div class="home-banner">
+        <img :src="tetBanner" alt="">
       </div>
-
-      <div class="home-sale tw-rounded-xl tw-overflow-hidden tw-flex tw-flex-col tw-gap-6 tw-px-4 tw-py-5" :style="{
-        backgroundImage: `url(${bgChistmas})`,
-        backgroundPosition: '0% 0%',
-        backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat',
-      }">
+      <div class="home-sale tw-rounded-xl tw-overflow-hidden tw-flex tw-flex-col tw-gap-6 tw-px-4 tw-py-5">
         <Heading event-title="HOT SALE GIÁ SỐC" :timer="true" />
         <div class="list-product">
           <swiper :modules="modules" :slides-per-view="3" :navigation="true" :space-between="24" id="swiper-slider"
@@ -38,9 +59,9 @@
           </swiper>
         </div>
       </div>
-      <img src="" alt="" />
+
       <div class="best-seller tw-bg-white tw-rounded-xl tw-overflow-hidden tw-flex tw-flex-col tw-gap-6 tw-px-4 tw-py-5">
-        <Heading toptitle="This Month" title="Best Selling Product" />
+        <Heading toptitle="Tháng này" title="Sản phẩm bán chạy" />
         <div class="list-product">
           <swiper :modules="modules" :slides-per-view="3" :navigation="true" :space-between="24" id="swiper-slider"
             :breakpoints="breakpoints">
@@ -50,8 +71,11 @@
           </swiper>
         </div>
       </div>
+      <div class="home-banner">
+        <img src="https://cdn.hoanghamobile.com/i/home/Uploads/2024/01/23/zflip-1899000.png" alt="">
+      </div>
       <div class="home-brand tw-rounded-xl tw-bg-white tw-flex tw-flex-col tw-gap-6 tw-px-4 tw-py-5">
-        <Heading toptitle="Brands" title="Brands" />
+        <Heading toptitle="Brands" title="Thương hiệu nổi tiếng" />
         <Brands />
       </div>
       <div class="best-seller tw-bg-white tw-rounded-xl tw-overflow-hidden tw-flex tw-flex-col tw-gap-6 tw-px-4 tw-py-5">
@@ -74,9 +98,13 @@
 import Menu from "@/components/categories/Menu.vue";
 import Container from "@components/base/Container.vue";
 import banner from "@/assets/images/banner.jpg";
+import banner1 from "@/assets/images/banner/b1.png";
+import banner2 from "@/assets/images/banner/b2.png";
+import banner3 from "@/assets/images/banner/b3.png";
+import adv from "@/assets/images/banner/adv.jpg"
+import tetBanner from "@/assets/images/banner/tet-banner.gif";
 import Brands from "@/components/brands/Brands.vue";
 import Heading from "@/components/base/Heading.vue";
-import Categories from "@/components/categories/Categories.vue";
 import ProductItem from "@/components/product/ProductItem.vue";
 import { breakpoints } from "@utils/breackpoints"
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -126,6 +154,85 @@ const { data: products } = useListProductsSale(10)
     .home-slider {
       flex: 1;
       box-shadow: $box-shadow-section;
+
+      &-main {
+        height: calc(100% - 80px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      &__bottom {
+        height: 80px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        background-color: $bg-light-gray;
+
+        &-item {
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          align-items: center;
+          transition: opacity .2s ease-in-out;
+
+          p {
+            text-align: center;
+            font-size: 12px;
+            text-transform: uppercase;
+          }
+
+          span {
+            font-size: 12px;
+            font-weight: 300;
+          }
+
+          &:hover {
+            opacity: 0.75;
+          }
+        }
+      }
+    }
+
+    .home__right-banner {
+      display: none;
+
+      .right-banner {
+        max-width: 265px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+      }
+
+      @include min-xl {
+        display: block;
+        width: 256px;
+        padding: 8px;
+
+        .banner-item {
+          padding: 8px;
+
+          img {
+            width: 100%;
+            border-radius: 8px;
+
+          }
+        }
+      }
+    }
+  }
+
+  .home-banner {
+    img {
+      width: 100%;
     }
   }
 
@@ -146,8 +253,8 @@ const { data: products } = useListProductsSale(10)
 
         &::after {
           color: $navigation-btn-color;
-          font-size: 2rem;
-          font-weight: 800;
+          font-size: 1.5rem;
+          font-weight: 600;
         }
 
         &:hover {
@@ -155,15 +262,15 @@ const { data: products } = useListProductsSale(10)
         }
 
         @include min-lg {
-          display: block;
+          display: flex;
         }
       }
 
+
       .swiper-pagination-bullet {
         &.swiper-pagination-bullet-active {
-          width: 22px;
           border-radius: 4px;
-          background-color: $azure;
+          background-color: $red;
           transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
       }
@@ -176,7 +283,7 @@ const { data: products } = useListProductsSale(10)
   }
 
   .home-sale {
-    background-color: $black;
+    background: linear-gradient(rgb(142, 2, 35), rgb(224, 0, 51)) 0% 0% / cover;
   }
 
   .home-brand {

@@ -1,4 +1,5 @@
 export interface IAddress {
+    id?: string | number
     province: string,
     district: string,
     ward: string,
@@ -11,25 +12,15 @@ export interface IAddressForm {
     houseNumber?: string | null
 }
 export interface IProvince {
-    code: string | number,
-    code_name?: string,
-    division_type?: string,
-    name?: string,
-    phone_code: string,
-    districts: IDistrict[]
+    province_id: string | number,
+    province_name: string,
+    province_type: string
 }
 export interface IDistrict {
-    code: string | number,
-    codename?: string,
-    division_type?: string,
-    province_code: number,
-    name?: string,
-    wards: IWard[]
+    district_id: string | number,
+    district_name: string,
 }
 export interface IWard {
-    code: string | number,
-    code_name?: string,
-    division_type?: string,
-    name?: string,
-    district_code: number
+    ward_id: string | number,
+    ward_name: string,
 }

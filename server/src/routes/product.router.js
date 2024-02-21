@@ -7,6 +7,6 @@ router.get('/get-all', productController.getAll)
 router.get('/sale', productController.getProductSale)
 router.post('/create', productController.createProduct)
 router.get('/:slug', productController.getProductBySlug)
-
+router.get('/variant/:id', productController.getProductVariant)
 
 module.exports = router

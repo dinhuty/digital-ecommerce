@@ -49,6 +49,9 @@
             <span class="base-price">
               {{ formatMoney(getPriceByVariant(productSelected?.colorId as number, productSelected.memoryId as number,
                 product?.productVariants, product?.basePrice)) }}
+              {{ console.log(formatMoney(getPriceByVariant(productSelected?.colorId as number, productSelected.memoryId as
+                number,
+                product?.productVariants, product?.basePrice))) }}
             </span>
             <span class="disc-price">
               {{ formatMoney(getPriceByVariant(productSelected?.colorId as number, productSelected.memoryId as number,
@@ -118,7 +121,7 @@
             </div>
           </div>
           <div class="product-btn tw-flex tw-gap-3 tw-w-full tw-py-2">
-            <div class="btn-buy--now tw-flex-1">
+            <div class="btn-buy--now tw-flex-1" @click="handleBuyNow">
               Mua ngay
             </div>
             <div class="btn-add" v-if="!isAddLoading" @click="handleAddToCart">
@@ -213,6 +216,8 @@ import { getPriceByVariant, getStockByVariant } from "@/utils/product/getPriceBy
 import { IProductVariant } from "@/types/product.types";
 import { useAuth } from "@/composables/useAuth";
 import { useCart } from "@/composables/useCart"
+import { useStorage } from "@vueuse/core";
+import { PRODUCT_GUEST } from "@/utils/constants";
 interface IProductSelected {
   id: string | null,
   variantId?: number | null
@@ -267,6 +272,22 @@ const handleAddToCart = async () => {
     })
     if (variant?.id) {
       await addToCart({ userId: userId.value, productVariantId: variant?.id })
+    }
+  } else {
+    alert("Error ..")
+  }
+}
+const handleBuyNow = async () => {
+  const productForBuy = useStorage(PRODUCT_GUEST, "");
+  if (product.value?.productVariants) {
+    const variant = product.value?.productVariants?.find((variant) => {
+      return (variant.color?.id === productSelected.colorId &&
+        variant.memory?.id === productSelected.memoryId
+      )
+    })
+    if (variant?.id) {
+      productForBuy.value = (variant?.id).toString()
+      router.push('/cart/checkout')
     }
   } else {
     alert("Error ..")

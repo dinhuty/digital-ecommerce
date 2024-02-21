@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "userId",
                 as: 'user'
             });
-
+            this.belongsTo(models.OrderStatus, {
+                foreignKey: "orderStatusId",
+                as: 'orderStatus'
+            });
             this.belongsTo(models.Address, {
                 foreignKey: "addressId",
                 as: "address"

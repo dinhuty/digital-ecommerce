@@ -17,6 +17,9 @@
         <form @submit.prevent="handleRegister" class="register-form tw-flex tw-flex-col tw-gap-5">
           <div class="form__group tw-flex tw-flex-col tw-gap-4">
             <div>
+              <MyInput placeholder="Họ tên" v-model="dataForm.userName" name="name" />
+            </div>
+            <div>
               <MyInput placeholder="example@gmail.com" v-model="dataForm.email" name="email" />
             </div>
             <div>
@@ -114,12 +117,14 @@ import { IError } from "@/types/error.type";
 
 const { registerData, registerError, isRegisterLoading, register } = useAuth()
 const dataForm = ref<IRegisterBody>({
+  userName: '',
   email: '',
   password: '',
   confirmPassword: ''
 })
 const handleRegister = async () => {
   await register({
+    userName: dataForm.value.userName,
     email: dataForm.value.email,
     password: dataForm.value.password,
     confirmPassword: dataForm.value.confirmPassword

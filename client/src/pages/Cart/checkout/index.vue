@@ -4,7 +4,7 @@
 
     <Container class="checkout-section tw-flex tw-gap-4 tw-flex-col">
       <div class="title">Thông tin</div>
-      <div class="list-product tw-flex tw-justify-between tw-gap-3" v-for="cartItem in carts">
+      <div v-if="userId" class="list-product tw-flex tw-justify-between tw-gap-3" v-for="cartItem in carts">
         <div class="list-product__left tw-flex tw-gap-4 ">
           <div class="product-img">
             <img class="tw-w-full tw-h-full tw-object-cover" :src="cartItem.productVariant.product?.thumbUrl" alt="" />
@@ -42,6 +42,44 @@
           </div>
         </div>
       </div>
+      <div v-else class="list-product tw-flex tw-justify-between tw-gap-3">
+        <div v-if="productGuest" class="list-product__left tw-flex tw-gap-4 ">
+          <div class="product-img">
+            <img class="tw-w-full tw-h-full tw-object-cover" :src="productGuest.product?.thumbUrl" alt="" />
+          </div>
+          <div class="product-desc tw-py-2 tw-flex tw-flex-col tw-justify-between">
+            <router-link :to="`/product/${productGuest.product?.slug}`"
+              class="product-desc--name tw-cursor-pointer hover:tw-text-red tw-transition-all">
+              {{ productGuest.product?.name }}
+              {{ productGuest.memory?.ram }}
+              /
+              {{ productGuest.memory?.rom }}
+              -
+              {{ productGuest.color?.name }}
+            </router-link>
+            <div class="product-desc__price tw-flex tw-gap-2">
+              <div class="product-desc__price--show">
+                {{ formatMoney(productGuest.price as number) }}
+              </div>
+              <div class="product-desc__price--throw">
+                {{
+                  formatMoney(getRealPrice(productGuest.price as number,
+                    productGuest.product?.discountPercentage as number)) }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-product__right tw-flex tw-flex-col tw-justify-between tw-items-end">
+          <div class="product-quantity tw-flex tw-gap-1">
+            <span class="product-quantity__title">
+              Số lượng:
+            </span>
+            <span class="product-quantity__number">
+              1
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="box-customer tw-flex tw-flex-col tw-gap-2">
         <div class="box-customer__title tw-uppercase">
           Thông tin khách hàng
@@ -64,13 +102,13 @@
         </div>
         <div class="box-address__wrapper">
           <div class="box-address__select">
-            <SelectAddress title="Chọn Tỉnh/Thành phố" v-model="address.province" :items="provinces" />
+            <SelectAddress title="Chọn Tỉnh/Thành phố" :type="1" v-model="address.province" :items="provinces" />
           </div>
           <div class="box-address__select ">
-            <SelectAddress title="Chọn Quận/Huyện" v-model="address.district" :items="districts" />
+            <SelectAddress title="Chọn Quận/Huyện" :type="2" v-model="address.district" :items="districts" />
           </div>
           <div class="box-address__select">
-            <SelectAddress title="Chọn Xã Phường" v-model="address.ward" :items="wards" />
+            <SelectAddress title="Chọn Xã Phường" :type="3" v-model="address.ward" :items="wards" />
           </div>
           <div class="box-address__input">
             <MyInput class="" placeholder="Số nhà tên đường" v-model="address.houseNumber" />
@@ -118,12 +156,20 @@
           <button @click="handleOrder"
             class="btn-checkout tw-self-start tw-justify-self-start hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
             <span> Đặt hàng </span>
-            <span> ({{ 3 }})</span>
           </button>
         </div>
-        <router-link v-else to="/" class="go-back tw-transition-all hover:tw-opacity-75">
-          Quay lại trang chủ
-        </router-link>
+        <div v-if="productGuest" class="price-info tw-flex tw-justify-between">
+          <div class="price-term tw-flex tw-flex-col tw-gap-2">
+            <p class="tw-block">Tổng tiền sản phẩm:</p>
+            <span class="tw-block">
+              {{ formatMoney(productGuest.price as number) }}
+            </span>
+          </div>
+          <button @click="handleOrderGuest"
+            class="btn-checkout tw-self-start tw-justify-self-start hover:tw-opacity-75 tw-transition-all tw-cursor-pointer">
+            <span> Đặt hàng </span>
+          </button>
+        </div>
       </div>
     </Container>
   </div>
@@ -137,7 +183,6 @@ import SelectAddress from "@/components/common/SelectAddress.vue";
 import { _axios, } from "@plugins/axios/axios";
 import vnpayLogo from "@/assets/svg/payments/vnpay-seeklogo.svg"
 import shippingLogo from "@/assets/svg/payments/shipping_logo.svg"
-
 import {
   IAddressForm,
   IAddress,
@@ -146,16 +191,19 @@ import {
   IWard,
 } from "@/types/address.type";
 import {
-  IOrderInfor
+  IOrderInfor, IOrderInforGuest
 } from "@/types/order.type"
 import { useCart } from "@/composables/useCart";
+import { useGetProductVariant } from "@/api/product/query";
 import { useOrder } from "@/composables/useOrder";
 import { useAuth } from "@/composables/useAuth"
 import { ICart } from "@/types/cart.types";
 import { formatMoney } from "@/utils/formatMoney";
 import { getRealPrice } from "@/utils/product/getPriceAfterDiscount";
 import { getTotalAmount } from "@/utils/product/getTotalPrice";
-const host = "https://provinces.open-api.vn/api/";
+import { IProductVariant } from "@/types/product.types";
+import { PRODUCT_GUEST } from "@/utils/constants";
+const host = "https://vapi.vnappmob.com/api/";
 // define inteface
 interface IBaseInfor {
   userName: string,
@@ -168,8 +216,13 @@ const {
   orderProduct,
   orderData,
   orderError,
-  isOrderLoading
+  isOrderLoading,
+  orderProductGuest,
+  orderGuestData,
+  orderGuestError,
+  isOrderGuestLoading
 } = useOrder()
+
 const { getUserCarts, carts } = useCart()
 
 //get info provinces
@@ -182,6 +235,7 @@ const address = ref<IAddressForm>({
   ward: null,
   houseNumber: null,
 });
+const { data: productGuest, isFetching } = useGetProductVariant(localStorage.getItem(PRODUCT_GUEST) as string)
 
 onMounted(async () => {
   if (userId) {
@@ -201,13 +255,14 @@ const handleOrder = async () => {
     !baseInfor.value.phoneNumber ||
     carts.value.length === 0
   ) {
+    console.log("Trống")
     return
   }
   const orderData = ref<IOrderInfor>({
     address: {
-      province: address.value.province?.name as string,
-      district: address.value.district?.name as string,
-      ward: address.value.ward?.name as string,
+      province: address.value.province?.province_name as string,
+      district: address.value.district?.district_name as string,
+      ward: address.value.ward?.ward_name as string,
       houseNumber: address.value.houseNumber as string
     },
     carts: carts.value,
@@ -219,19 +274,54 @@ const handleOrder = async () => {
   await orderProduct(orderData.value)
 
 }
-const getProvince = (api: string, target: string) => {
-  _axios.get(api).then((response) => {
-    if (target === "city") {
-      provinces.value = response.data;
-    } else if (target === "district") {
-      districts.value = response.data.districts;
-    } else if (target === "ward") {
-      wards.value = response.data.wards;
-    }
-  });
-};
-onMounted(() => {
-  getProvince(`${host}`, "city");
+const handleOrderGuest = async () => {
+  if (Object.values(address.value).includes(null) ||
+    !baseInfor.value.userName ||
+    !baseInfor.value.phoneNumber
+  ) {
+    console.log("Trống")
+    return
+  }
+  const orderData = ref<IOrderInforGuest>({
+    address: {
+      province: address.value.province?.province_name as string,
+      district: address.value.district?.district_name as string,
+      ward: address.value.ward?.ward_name as string,
+      houseNumber: address.value.houseNumber as string
+    },
+    productVariantId: localStorage.getItem(PRODUCT_GUEST) as string,
+    userName: baseInfor.value.userName,
+    phoneNumber: baseInfor.value.phoneNumber,
+    paymentId: paymentSelected.value
+  })
+  console.log(orderData.value)
+  await orderProductGuest(orderData.value)
+
+}
+const getProvinceAddress = async () => {
+  _axios.get(host + "province").then((res) => {
+    provinces.value = res.data.results
+  }).catch(error => {
+    console.log(error)
+  })
+}
+const getDistrictAddress = async (provinceId: string | number) => {
+  _axios.get(host + `province/district/${provinceId}`).then((res) => {
+    districts.value = res.data.results
+  }).catch(error => {
+    console.log(error)
+  })
+}
+const getWardAddress = async (districtId: string | number) => {
+  _axios.get(host + `province/ward/${districtId}`).then((res) => {
+    wards.value = res.data.results
+  }).catch(error => {
+    console.log(error)
+  })
+}
+onMounted(async () => {
+  await getProvinceAddress()
+  console.log(provinces.value)
 });
 watch(
   () => address.value.province,
@@ -242,7 +332,7 @@ watch(
     wards.value = [];
     address.value.ward = null;
     if (selectedCity) {
-      getProvince(`${host}p/${selectedCity.code}?depth=2`, "district");
+      getDistrictAddress(selectedCity.province_id)
     }
   }
 );
@@ -252,7 +342,7 @@ watch(
     wards.value = [];
     address.value.ward = null;
     if (selectedDistrict) {
-      getProvince(`${host}d/${selectedDistrict.code}?depth=2`, "ward");
+      getWardAddress(selectedDistrict.district_id)
     }
   }
 );

@@ -1,26 +1,48 @@
 <template>
     <div class="default-layout">
         <Header></Header>
-        <div class="app-main">
+        <div class="app-main tw-flex tw-flex-col tw-gap-5 tw-pb-4">
+            <BreadScrumb name-page="Tài khoản" :sub-navs="[]" />
             <Container>
                 <div class="app-account">
-                    <div class="sidebar">
-                        <router-link class="sidebar-item tw-flex tw-gap-1" :to="item.path" v-for="item in sidebarItems"
-                            :key="item.value">
-                            <img class="tw-h-6 tw-w-6" :src="item.icon" :alt="item.value">
-                            <span>{{ item.title }}</span>
-                        </router-link>
-                        <div class="sidebar-item tw-flex tw-gap-1">
-                            <div class="sidebar__left tw-h-6 tw-w-6">
-                                <img class="tw-h-full tw-w-full" :src="logoutSvg" alt="logout-icon">
+                    <div class="app-account__left">
+                        <div class="sidebar">
+                            <div class="account-info tw-flex tw-items-center tw-gap-3">
+                                <div class="avatar">
+                                    <img src="https://bim.gov.vn/Upload/images/staffs/avatar-default.jpg" alt="">
+                                </div>
+                                <div class="base-info">
+                                    <span class="title">
+                                        Hello
+                                    </span>
+                                    <span class="name">
+                                        Dinh Tran
+                                    </span>
+                                </div>
                             </div>
-                            <div class="sidebar__right">
-                                Đăng xuất
+                            <router-link class="sidebar-item tw-flex tw-gap-1" :to="item.path" v-for="item in sidebarItems"
+                                :key="item.value">
+                                <img class="tw-h-6 tw-w-6" :src="item.icon" :alt="item.value">
+                                <span>{{ item.title }}</span>
+                            </router-link>
+                            <div class="sidebar-item app-logout  tw-flex tw-gap-1" @click="activeModal">
+                                <div class="sidebar__left tw-h-6 tw-w-6">
+                                    <img class="tw-h-full tw-w-full" :src="logoutSvg" alt="logout-icon">
+                                </div>
+                                <div class="sidebar__right">
+                                    Đăng xuất
+                                </div>
                             </div>
                         </div>
+                        <div id="sign-out-modal">
+                            <Modal content="Bạn muốn thoát tài khoản?" :is-active="activeModalSignOut"
+                                @updateIsActive="closeModal" @confirmAction="handleLogout" />
+                        </div>
                     </div>
-                    <div class="main">
-                        <router-view />
+                    <div class="app-account__right">
+                        <div class="main">
+                            <router-view />
+                        </div>
                     </div>
                 </div>
             </Container>
@@ -40,6 +62,9 @@ import heartSvg from "@assets/svg/account/heart.svg"
 import logoutSvg from "@assets/svg/account/logout.svg"
 import profileSvg from "@assets/svg/account/profile.svg"
 import notificationSvg from "@assets/svg/account/notification.svg"
+import BreadScrumb from "@/components/base/BreadScrumb.vue";
+import secureSvg from "@assets/svg/categories/secure.svg"
+import Modal from "@/components/common/Modal.vue";
 
 interface ISideBarItem {
     value: string,
@@ -71,9 +96,26 @@ const sidebarItems = ref<ISideBarItem[]>([
         icon: notificationSvg,
         title: "Thông báo",
         path: "/account/notification",
-    }
+    },
+    {
+        value: "secure-icon",
+        icon: secureSvg,
+        title: "Thay đổi mật khẩu",
+        path: "/account/change-password",
+    },
 ]);
-
+const router = useRouter();
+const activeModalSignOut = ref<boolean>(false)
+const activeModal = () => {
+    activeModalSignOut.value = true
+}
+const closeModal = (value: boolean) => {
+    activeModalSignOut.value = value
+}
+const handleLogout = () => {
+    localStorage.clear()
+    router.push({ path: '/login' })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -86,20 +128,24 @@ const sidebarItems = ref<ISideBarItem[]>([
 
 .app-account {
     display: flex;
-    padding: 40px 0;
-    gap: 20px;
+    padding: 20px 0;
+    position: relative;
 
     .sidebar {
-        width: 250px;
-        background-color: $gray-light;
-        padding: 15px 10px;
+        width: 270px;
+        min-height: calc(100vh - 200px);
+        background-color: rgba(189, 189, 189, 0.099);
+        padding: 15px;
         border-radius: 4px;
         display: flex;
         flex-direction: column;
         position: sticky;
+        top: 100px;
         box-sizing: border-box;
         gap: 10px;
         padding-bottom: 60px;
+        justify-content: flex-start;
+
 
         .sidebar-item {
             padding: 8px 15px;
@@ -107,11 +153,13 @@ const sidebarItems = ref<ISideBarItem[]>([
             justify-content: flex-start;
             align-items: center;
             font-weight: 500;
-            font-size: 15px;
+            font-size: 14px;
             border-radius: 4px;
             transition: all 0.22s ease-in-out;
             cursor: pointer;
             border: 0.5px solid transparent;
+
+
 
             &.is-active,
             &:hover {
@@ -124,11 +172,71 @@ const sidebarItems = ref<ISideBarItem[]>([
                 }
             }
 
+            &.app-logout {
+                position: absolute;
+                bottom: 20px;
+
+                &:hover {
+                    background-color: transparent;
+                    border: 0.5px solid transparent;
+                    color: $red;
+
+                    img {
+                        filter: invert(37%) sepia(93%) saturate(7471%) hue-rotate(355deg) brightness(76%) contrast(135%);
+                    }
+                }
+            }
+
+        }
+
+        .account-info {
+            padding-bottom: 10px;
+            border-bottom: 1px solid $border-section;
+
+            .avatar {
+                height: 50px;
+                width: 50px;
+                border-radius: 50%;
+
+                img {
+                    overflow: hidden;
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 50%;
+                }
+            }
+
+            .base-info {
+                display: flex;
+                flex-direction: column;
+
+                .title {
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: $gray;
+                }
+
+                .name {
+                    font-size: 16px;
+                    font-weight: 500;
+                    color: $red;
+                }
+            }
         }
     }
 
-    .main {
-        flex: 1;
+    .app-account__left {
+        #sign-out-modal {}
+    }
+
+    .app-account__right {
+        width: calc(100% - 270px);
+        padding-top: 15px;
+        padding-left: 28px;
+
+        .main {
+            width: 100%;
+        }
     }
 }
 </style>

@@ -6,35 +6,32 @@
           {{ eventTitle }}
         </div>
       </div>
-      <div class="title tw-flex tw-flex-col tw-gap-4" v-else>
-        <div class="title-top tw-flex tw-flex-row tw-gap-4 tw-items-center">
+      <div class="title tw-flex tw-flex-col tw-gap-3" v-else>
+        <div class="title-top tw-flex tw-flex-row tw-gap-3 tw-items-center">
           <div class="rectangle tw-h-8 tw-w-4 tw-bg-red tw-rounded-sm"></div>
           <div class="text tw-font-bold tw-text-sm tw-text-red">
             {{ toptitle }}
           </div>
         </div>
-        <div class="title-bot tw-text-xl tw-font-bold">{{ title }}</div>
+        <div class="title-bot tw-text-lg tw-font-bold">{{ title }}</div>
       </div>
       <div class="heading-timer tw-flex tw-gap-3" v-if="timer">
         <div class="hour tw-flex tw-flex-col tw-gap-1 tw-items-center">
           <div class="number tw-bg-yellow">
             {{ formattedTime.hours }}
           </div>
-          <div class="title tw-text-white">Hours</div>
         </div>
         <span class="tw-text-white"> : </span>
         <div class="minute tw-flex tw-flex-col tw-gap-1 tw-items-center">
           <div class="number tw-bg-yellow">
             {{ formattedTime.minutes }}
           </div>
-          <div class="title tw-text-white">Minutes</div>
         </div>
         <span class="tw-text-white"> : </span>
         <div class="seconds tw-flex tw-flex-col tw-gap-1 tw-items-center">
           <div class="number tw-bg-yellow">
             {{ formattedTime.seconds }}
           </div>
-          <div class="title tw-text-white">Seconds</div>
         </div>
       </div>
     </div>
@@ -116,7 +113,7 @@ export default defineComponent({
   .heading-left {
     .title.title-event {
       color: $yellow;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
     }
 

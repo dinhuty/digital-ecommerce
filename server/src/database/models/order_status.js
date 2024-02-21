@@ -1,24 +1,16 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class Payment extends Model {
+    class OrderStatus extends Model {
 
         static associate(models) {
             this.hasMany(models.Order, {
-                foreignKey: "paymentId",
+                foreignKey: "orderStatusId",
                 as: "orders",
             });
-            this.belongsTo(models.PaymentStatus, {
-                foreignKey: "paymentStatusId",
-                as: "paymentStatus"
-            });
-            this.belongsTo(models.PaymentMethod, {
-                foreignKey: "paymentMethodId",
-                as: "paymentMethod"
-            })
         }
     }
-    Payment.init(
+    OrderStatus.init(
         {
             id: {
                 allowNull: false,
@@ -26,12 +18,17 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
             },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                unique: true,
+            },
         },
         {
             sequelize,
-            modelName: "Payment",
+            modelName: "OrderStatus",
             timestamps: true,
         }
     );
-    return Payment;
+    return OrderStatus;
 };

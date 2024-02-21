@@ -14,15 +14,10 @@ export interface ILoginResponse {
 }
 
 export interface IRegisterBody {
-  // firstname: string;
-  // lastname: string;
+  userName?: string;
   email: string;
   password: string;
   confirmPassword: string;
-  // address: string;
-  // phoneNumber: string;
-  // organization: string;
-  // enableEmailNotifications: boolean;
 }
 
 export interface INewAccessToken {

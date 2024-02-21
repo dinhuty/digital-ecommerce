@@ -1,5 +1,5 @@
 import { ICartResponse, IUserCarts } from "@/types/cart.types";
-import { IParams, IProduct, IProductsListResponse } from "@/types/product.types";
+import { IParams, IProduct, IProductVariant, IProductsListResponse } from "@/types/product.types";
 import { $axios } from "@plugins/axios/axios";
 
 
@@ -11,6 +11,10 @@ export const fetchProduct = (params: IParams) => {
 
 export const fetchProductDetails = (slug: string) => {
     return $axios.get<unknown, IProduct>(`/product/${slug}`)
+}
+
+export const fetchProductVariant = (productVariantId: string) => {
+    return $axios.get<unknown, IProductVariant>(`/product/variant/${productVariantId}`)
 }
 
 export const fetchProductOfCategory = (categoryName: string, params?: IParams) => {

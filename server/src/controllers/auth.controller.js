@@ -11,7 +11,7 @@ const mailer = require('../services/mailer')
 
 const register = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, userName } = req.body;
 
         const isUserExist = await User.findOne({ where: { email } });
         if (isUserExist) {
@@ -20,6 +20,7 @@ const register = async (req, res) => {
         const newUser = {
             password,
             email,
+            userName
         };
         await User.create(newUser);
         res.status(StatusCodes.CREATED).json({

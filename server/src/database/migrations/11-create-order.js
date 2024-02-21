@@ -27,6 +27,16 @@ module.exports = {
                 onDelete: "set null",
                 onUpdate: "cascade",
             },
+            orderStatusId: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'Addresses',
+                    key: 'id',
+                },
+                onDelete: "set null",
+                onUpdate: "cascade",
+            },
             addressId: {
                 type: Sequelize.INTEGER,
                 allowNull: true,

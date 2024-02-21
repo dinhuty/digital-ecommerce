@@ -1,6 +1,6 @@
 <template>
     <div class="account-notification">
-        Order
+        <h1>Không có thông báo nào</h1>
     </div>
 </template>
   
@@ -15,5 +15,11 @@
       layout: "accountLayout"
   </route>
 <style lang="scss">
-.account-profile {}
+.account-notification {
+    h1 {
+        font-size: 13px;
+        font-weight: 500;
+        font-style: italic;
+    }
+}
 </style>

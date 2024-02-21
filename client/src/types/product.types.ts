@@ -58,5 +58,6 @@ export interface IProductVariant {
   stock?: number,
   price?: number,
   color?: IColor,
-  memory?: IMemory
+  memory?: IMemory,
+  product?: IProduct
 }

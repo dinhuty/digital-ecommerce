@@ -148,7 +148,7 @@ const getProductBySlug = async (req, res, next) => {
                 {
                     model: ProductVariant,
                     as: 'productVariants',
-                    attributes: ['id','stock', 'price'],
+                    attributes: ['id', 'stock', 'price'],
                     include: [
                         {
                             model: Color,
@@ -172,6 +172,53 @@ const getProductBySlug = async (req, res, next) => {
         return res.status(StatusCodes.OK).json(product)
     } catch (error) {
         console.log(error)
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Lỗi server",
+            status: StatusCodes.BAD_REQUEST
+        })
+    }
+}
+
+const getProductVariant = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        const productVariant = await ProductVariant.findOne({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt']
+            },
+            include: [
+                {
+                    model: Color,
+                    as: 'color',
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
+                },
+                {
+                    model: Memory,
+                    as: 'memory',
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
+                },
+                {
+                    model: Product,
+                    as: 'product',
+                    attributes: [
+                        'id',
+                        'name',
+                        'description',
+                        'discountPercentage',
+                        'thumbUrl',
+                        'slug',
+                        'basePrice',
+                    ]
+                }
+            ],
+            where: { id }
+        })
+        return res.status(StatusCodes.OK).json(productVariant)
+    } catch (error) {
         return res.status(StatusCodes.BAD_REQUEST).json({
             message: "Lỗi server",
             status: StatusCodes.BAD_REQUEST
@@ -227,5 +274,6 @@ module.exports = {
     getProductBySlug,
     updateProduct,
     deleteProduct,
-    getProductSale
+    getProductSale,
+    getProductVariant
 }

@@ -1,5 +1,5 @@
-import { useCreateOrderMutation } from "@/api/order/query";
-import { IOrderInfor } from "@/types/order.type";
+import { useCreateOrderMutation, useCreateOrderGuestMutation } from "@/api/order/query";
+import { IOrderInfor, IOrderInforGuest } from "@/types/order.type";
 
 export const useOrder = () => {
     const router = useRouter();
@@ -24,11 +24,35 @@ export const useOrder = () => {
         }
     };
 
+    const {
+        data: orderGuestData,
+        isLoading: isOrderGuestLoading,
+        error: orderGuestError,
+        mutateAsync: orderGuestMutateAsync,
+    } = useCreateOrderGuestMutation();
+
+    const orderProductGuest = async (orderInfo: IOrderInforGuest) => {
+        start();
+        try {
+            await orderGuestMutateAsync(orderInfo);
+            if (orderData && orderData.value) {
+                console.log("Order Thành công")
+                router.push("/cart/checkout/thank-you");
+            }
+        } finally {
+            finish();
+        }
+    };
+
 
     return {
         orderProduct,
         orderData,
         orderError,
-        isOrderLoading
+        isOrderLoading,
+        orderProductGuest,
+        orderGuestData,
+        orderGuestError,
+        isOrderGuestLoading
     };
 };
