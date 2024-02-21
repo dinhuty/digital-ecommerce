@@ -81,65 +81,11 @@
                             Tổng thanh toán:
                         </span>
                         <span>
-                            40.000.000đ
+                            {{ formatMoney(getTotalAmount(order.orderDetails as ICart[])) }}
                         </span>
                     </div>
 
                 </div>
-                <!-- <div class="order-group">
-                    <div class="order-group__header tw-flex tw-justify-between">
-                        <div class="header__left">
-                            <div class="header__top">
-                                <span>
-                                    Mã đơn hàng
-                                </span>
-                                <p>
-                                    #87582375
-                                </p>
-                            </div>
-                            <div class="header__payment">
-                                <div class="order-payment--status">
-                                    Đã thanh toán
-                                </div>
-                                <div class="order-time">
-                                    <div class="icon">
-                                        <img :src="calendarIcon" alt="">
-                                    </div>
-                                    <div class="text">
-                                        13h10 21/02/2024
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="header__bottom">
-                                <span>
-                                    Địa chỉ giao hàng:
-                                </span>
-                                <p>
-                                    Xóm 2 Giao Long - Giao Thủy - Nam Định
-                                </p>
-                            </div>
-                        </div>
-                        <div class="header__right">
-                            <button class="order-btn--cancel">
-                                Hủy đơn
-                            </button>
-                        </div>
-                    </div>
-                    <div class="order-list">
-                        <OrderItem />
-                        <OrderItem />
-                        <OrderItem />
-                    </div>
-                    <div class="order-group__bottom tw-flex tw-justify-end tw-gap-2 tw-pt-4 tw-pb-2">
-                        <span>
-                            Tổng thanh toán:
-                        </span>
-                        <span>
-                            40.000.000đ
-                        </span>
-                    </div>
-
-                </div> -->
             </div>
         </div>
     </div>
@@ -158,6 +104,9 @@ import { SwiperModule } from "swiper/types";
 import OrderItem from "@/components/cart/OrderItem.vue"
 import { useListOrderUser } from "@/api/order/query";
 import { formatTime } from "@utils/formatTime"
+import { getTotalAmount } from "@/utils/product/getTotalPrice";
+import { ICart } from "@/types/cart.types";
+import { formatMoney } from "@/utils/formatMoney";
 
 const modules: SwiperModule[] = [Navigation, Pagination, Autoplay, EffectCube];
 interface IOrderStatus {

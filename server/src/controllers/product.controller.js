@@ -24,6 +24,15 @@ const getAll = async (req, res, next) => {
         // query conditions
         const categoryCondition = queryCondition(req.params?.categoryName, 'name');
         const brandCondition = queryCondition(req.query?.brand, 'nameAscii')
+        let productCondition = {}
+        if (req.params?.keyword) {
+            productCondition = {
+                name: {
+                    [Op.like]: `%${req.params?.keyword}%`
+                }
+            }
+        }
+        console.log(req.params?.keyword)
 
         const { rows, count } = await Product.findAndCountAll({
             attributes: [
@@ -51,6 +60,7 @@ const getAll = async (req, res, next) => {
                     where: categoryCondition,
                 }
             ],
+            where: productCondition,
             order: sort,
             offset,
             limit,

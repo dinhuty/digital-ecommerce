@@ -1,4 +1,4 @@
-const { Order, OrderDetail, Product, Address, OrderStatus, ProductVariant, Color, Memory, Payment, PaymentMethod, PaymentStatus } = require('../database/models')
+const { Order, Cart, OrderDetail, Product, Address, OrderStatus, ProductVariant, Color, Memory, Payment, PaymentMethod, PaymentStatus } = require('../database/models')
 const { Op } = require("sequelize");
 const { NotFoundError,
     BadRequestError,
@@ -46,6 +46,12 @@ const createOrder = async (req, res, next) => {
         }));
         const createdOrderDetails = await OrderDetail.bulkCreate(orderDetailData);
 
+        //clear cart 
+        Cart.destroy({
+            where: {
+                userId: userId
+            }
+        })
         res.status(StatusCodes.CREATED).json({
             message: "Đặt hàng thành công",
             status: StatusCodes.CREATED
@@ -193,6 +199,7 @@ const getUserOrders = async (req, res, next) => {
                     ]
                 }
             ],
+            where: { userId },
             order: [["createdAt", "desc"]],
             offset,
             limit,

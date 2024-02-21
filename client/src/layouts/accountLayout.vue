@@ -16,7 +16,7 @@
                                         Hello
                                     </span>
                                     <span class="name">
-                                        Dinh Tran
+                                        {{ user.userName }}
                                     </span>
                                 </div>
                             </div>
@@ -65,6 +65,7 @@ import notificationSvg from "@assets/svg/account/notification.svg"
 import BreadScrumb from "@/components/base/BreadScrumb.vue";
 import secureSvg from "@assets/svg/categories/secure.svg"
 import Modal from "@/components/common/Modal.vue";
+import { useAuth } from "@/composables/useAuth";
 
 interface ISideBarItem {
     value: string,
@@ -104,6 +105,7 @@ const sidebarItems = ref<ISideBarItem[]>([
         path: "/account/change-password",
     },
 ]);
+const { user } = useAuth()
 const router = useRouter();
 const activeModalSignOut = ref<boolean>(false)
 const activeModal = () => {

@@ -41,7 +41,7 @@ const confirmAction = () => {
     justify-content: center;
     overflow: hidden;
     position: fixed;
-    z-index: 40;
+    z-index: 999;
     top: 0;
     left: 0;
     right: 0;

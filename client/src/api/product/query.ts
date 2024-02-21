@@ -11,7 +11,8 @@ import {
     fetchBase,
     addProductToCart,
     fetchUserCarts,
-    fetchProductVariant
+    fetchProductVariant,
+    fetchProductByKeyword
 } from "./product";
 import { IParams, } from "@/types/product.types";
 
@@ -72,6 +73,21 @@ export const useGetProductsByCategory = (
     return useQuery(
         ["products-categories", categoryName],
         () => fetchProductOfCategory(categoryName, params?.value),
+        {
+            enabled,
+            refetchOnWindowFocus: false
+        }
+    );
+};
+
+export const useGetProductByKeyword = (
+    keyword: string,
+    params?: Ref<IParams>,
+    enabled?: boolean
+) => {
+    return useQuery(
+        ["products-categories", keyword],
+        () => fetchProductByKeyword(keyword, params?.value),
         {
             enabled,
             refetchOnWindowFocus: false

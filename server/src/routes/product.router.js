@@ -4,6 +4,7 @@ const router = Router()
 
 router.get('/get-all/:categoryName', productController.getAll)
 router.get('/get-all', productController.getAll)
+router.get('/search/:keyword', productController.getAll)
 router.get('/sale', productController.getProductSale)
 router.post('/create', productController.createProduct)
 router.get('/:slug', productController.getProductBySlug)

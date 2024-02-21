@@ -1,6 +1,7 @@
 <template>
   <div class="app-product-list tw-flex tw-flex-col tw-gap-5 tw-pb-4">
-    <BreadScrumb :name-page="getNameCategory(category as string)" :sub-navs="[{name: 'Tất cả sản phẩm' ,path: '/product'}]"/>
+    <BreadScrumb :name-page="getNameCategory(category as string)"
+      :sub-navs="[{ name: 'Tất cả sản phẩm', path: '/product' }]" />
     <Container class="main tw-flex tw-gap-8 tw-flex-col">
       <div class="ads tw-flex tw-justify-center">
         <img :src="noen_1" alt="">
@@ -36,14 +37,15 @@
             <product-item :product="product" :path="product.slug" />
           </div>
         </ProductBox>
-        <div v-if="!data?.products.length && !isFetching" class="product-empty-result tw-flex tw-justify-center tw-w-full tw-p-8">
+        <div v-if="!data?.products.length && !isFetching"
+          class="product-empty-result tw-flex tw-justify-center tw-w-full tw-p-8">
           <span class="tw-font-semibold">
             Không tìm thấy sản phẩm nào
           </span>
         </div>
         <div v-if="!isFetching" class="product-pagination tw-pt-3 tw-flex tw-justify-center">
-          <VPagination v-if="data?.products.length && !isFetching" v-model="params.page" :pages="data?.total" :range-size="1"
-            active-color="#FFF" @update:modelValue="updateHandler" />
+          <VPagination v-if="data?.products.length && !isFetching" v-model="params.page" :pages="data?.total"
+            :range-size="1" active-color="#FFF" @update:modelValue="updateHandler" />
         </div>
       </div>
     </Container>

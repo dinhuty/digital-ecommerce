@@ -25,6 +25,14 @@ export const fetchProductOfCategory = (categoryName: string, params?: IParams) =
         }
     );
 };
+export const fetchProductByKeyword = (keyword: string, params?: IParams) => {
+    return $axios.get<unknown, IProductsListResponse>(
+        `/product/search/${keyword}`,
+        {
+            params,
+        }
+    );
+};
 export const fetchBase = (quantity: number) => {
     return $axios.get<unknown, IProductsListResponse>('/product/sale', {
         params: {

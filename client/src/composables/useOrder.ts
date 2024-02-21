@@ -16,8 +16,8 @@ export const useOrder = () => {
         try {
             await orderMutateAsync(orderInfo);
             if (orderData && orderData.value) {
-                console.log("Order Thành công")
-                router.push("/");
+                //Đặt hàng thành công
+                router.push("/account/order");
             }
         } finally {
             finish();
@@ -36,7 +36,7 @@ export const useOrder = () => {
         try {
             await orderGuestMutateAsync(orderInfo);
             if (orderData && orderData.value) {
-                console.log("Order Thành công")
+                //Order guest thành công
                 router.push("/cart/checkout/thank-you");
             }
         } finally {

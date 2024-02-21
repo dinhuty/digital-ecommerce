@@ -278,19 +278,25 @@ const handleAddToCart = async () => {
   }
 }
 const handleBuyNow = async () => {
-  const productForBuy = useStorage(PRODUCT_GUEST, "");
-  if (product.value?.productVariants) {
-    const variant = product.value?.productVariants?.find((variant) => {
-      return (variant.color?.id === productSelected.colorId &&
-        variant.memory?.id === productSelected.memoryId
-      )
-    })
-    if (variant?.id) {
-      productForBuy.value = (variant?.id).toString()
-      router.push('/cart/checkout')
-    }
+  if (userId) {
+    await handleAddToCart()
+    router.push("/cart")
+
   } else {
-    alert("Error ..")
+    const productForBuy = useStorage(PRODUCT_GUEST, "");
+    if (product.value?.productVariants) {
+      const variant = product.value?.productVariants?.find((variant) => {
+        return (variant.color?.id === productSelected.colorId &&
+          variant.memory?.id === productSelected.memoryId
+        )
+      })
+      if (variant?.id) {
+        productForBuy.value = (variant?.id).toString()
+        router.push('/cart/checkout')
+      }
+    } else {
+      alert("Error ..")
+    }
   }
 }
 onMounted(() => {

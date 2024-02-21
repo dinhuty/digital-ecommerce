@@ -5,7 +5,7 @@
       <div class="info-user">
         <div class="box-text">
           <span class="label"> Họ và tên: </span>
-          <div class="user-name">{{ user.username }}</div>
+          <div class="user-name">{{ user.userName }}</div>
         </div>
         <div class="box-text">
           <span class="label"> Email </span>

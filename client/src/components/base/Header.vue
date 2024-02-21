@@ -7,10 +7,10 @@
             <img :src="Logo" alt="" class="tw-w-auto tw-h-full" />
           </router-link>
         </div>
-        <div class="header-search tw-flex-1">
-          <input type="text" placeholder="Tìm kiếm sản phẩm"
+        <form class="header-search tw-flex-1" @submit.prevent="handleSearch">
+          <input type="text" placeholder="Tìm kiếm sản phẩm" v-model="keyword"
             class="tw-h-11 tw-rounded tw-transition-all tw-w-full tw-px-3 focus:tw-border-none" />
-        </div>
+        </form>
         <div class="header-right">
           <div class="header-item tw-h-full tw-flex tw-gap-2">
             <div class="header-right-box tw-transition-all tw-flex tw-gap-2 tw-items-center tw-flex-row tw-text-white">
@@ -77,9 +77,12 @@ import { useCart } from '@composables/useCart'
 
 const { loggedIn, user } = useAuth();
 const { totalItem } = useCart()
-
+const router = useRouter()
+const keyword = ref<string>('')
 const isScrolled = ref(false);
-
+const handleSearch = () => {
+  router.push(`/search/${keyword.value}`)
+}
 </script>
   
 <style scoped lang="scss">

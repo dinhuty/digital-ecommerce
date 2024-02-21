@@ -155,7 +155,7 @@ const profile = async (req, res) => {
         }
         return res.status(StatusCodes.OK).json({
             id: user.id,
-            username: user.userName,
+            userName: user.userName,
             email: user.email,
             isBlocked: user.isBlocked,
             avatarUrl: user.avatarUrl,
