@@ -94,6 +94,55 @@ const login = async (req, res) => {
     }
 
 }
+const loginSuccess = async (req, res) => {
+    try {
+        console.log("Đã vào")
+        const { userId: id } = req.body;
+        const user = await User.findOne({ where: { id } });
+        if (!user) {
+            throw new NotFoundError('Tài khoản chưa được đăng ký')
+        }
+
+        const { accessToken, refreshToken } = jwtCreate(user.id)
+
+        //Tìm và sửa refreshToken
+        await User.update({ refreshToken: refreshToken }, { where: { id } })
+
+        return res.status(StatusCodes.OK).json({
+            accessToken,
+            refreshToken: refreshToken,
+            user: {
+                id: user.id,
+                username: user.userName,
+                email: user.email,
+                isBlocked: user.isBlocked,
+                avatarUrl: user.avatarUrl,
+                isVerified: user.isVerified,
+                isAdmin: user.isAdmin
+            },
+            message: ReasonPhrases.OK,
+            status: StatusCodes.OK
+        })
+    } catch (error) {
+        if (error instanceof NotFoundError) {
+            return res.status(StatusCodes.NOT_FOUND).json({
+                message: error.message,
+                status: error.statusCode
+            })
+        }
+        if (error instanceof UnauthorizedError) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: error.message,
+                status: error.statusCode
+            })
+        }
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Lỗi server",
+            status: StatusCodes.BAD_REQUEST
+        })
+    }
+
+}
 
 const refreshToken = async (req, res) => {
     try {
@@ -274,6 +323,7 @@ const resetPasswordForm = async (req, res, next) => {
 module.exports = {
     register,
     login,
+    loginSuccess,
     refreshToken,
     profile,
     resetPassword,

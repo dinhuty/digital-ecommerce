@@ -6,6 +6,7 @@ const { corsMiddleware } = require('./middlewares')
 const cookieParser = require('cookie-parser')
 const createRouter = require('./routes')
 const connectDB = require("./database/config/connectDB");
+require("./database/config/passport");
 
 app.use(corsMiddleware)
 

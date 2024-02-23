@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="login-option tw-flex tw-justify-center tw-gap-8">
-          <div class="login-option__google tw-flex tw-gap-2 tw-items-center">
+          <div class="login-option__google tw-flex tw-gap-2 tw-items-center" @click="handleLoginWithGoogle">
             <div class="icon">
               <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -122,6 +122,12 @@ const handleLogin = async () => {
     email: loginData.value.email,
     password: loginData.value.password
   })
+}
+const handleLoginWithGoogle = () => {
+  window.open(
+    "http://localhost:3000/api/auth/google",
+    "_self"
+  );
 }
 
 

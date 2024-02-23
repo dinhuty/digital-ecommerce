@@ -1,4 +1,4 @@
-import { loginMutation, registerMutation, forgotPasswordMutation } from "@/api/auth/query";
+import { loginMutation, registerMutation, forgotPasswordMutation, loginUserSuccessMutation } from "@/api/auth/query";
 import useAuthStore from "@/store/auth";
 import { ACCESS_TOKEN_KEY, USER_ID, REFRESH_TOKEN_KEY } from "@/utils/constants";
 import { storeToRefs } from "pinia";
@@ -41,13 +41,41 @@ export const useAuth = () => {
         }
     };
 
+
+    const {
+        data: loginUserSucessData,
+        isLoading: isSignInUserSucessLoading,
+        error: signInUserSucessError,
+        mutateAsync: loginUserSucessMutateAsync,
+
+    } = loginUserSuccessMutation();
+
+    //login gg & fb
+    const signInUserSuccess = async (id: string | number) => {
+        try {
+            await loginUserSucessMutateAsync(
+                id
+            );
+            if (loginUserSucessData && loginUserSucessData.value) {
+                accessToken.value = loginUserSucessData.value?.accessToken;
+                refreshToken.value = loginUserSucessData.value.refreshToken
+                userId.value = String(loginUserSucessData.value?.user.id);
+                loggedIn.value = true
+                user.value = loginUserSucessData.value?.user
+                router.push("/");
+            }
+
+        } finally {
+            finish();
+        }
+    }
+
     const {
         data: registerData,
         isLoading: isRegisterLoading,
         error: registerError,
         mutateAsync: registerMutateAsync,
     } = registerMutation();
-
     const register = async ({ userName, email, password, confirmPassword }: IRegisterBody) => {
         start();
         try {
@@ -100,6 +128,10 @@ export const useAuth = () => {
         userId,
         forgotPassword,
         forgotPasswordData,
-        forgotPasswordError
+        forgotPasswordError,
+        loginUserSucessData,
+        isSignInUserSucessLoading,
+        signInUserSucessError,
+        signInUserSuccess
     };
 };

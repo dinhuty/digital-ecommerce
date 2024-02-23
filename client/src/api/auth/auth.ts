@@ -29,6 +29,9 @@ const auth = () => ({
             userId
         });
     },
+    getUserSuccess(userId: string | number) {
+        return $axios.post<unknown, ILoginResponse>("/auth/login-success", { userId });
+    }
 });
 
-export const { login, register, forgotPassword, getUser, getNewToken } = auth();
+export const { login, register, forgotPassword, getUserSuccess, getUser, getNewToken } = auth();

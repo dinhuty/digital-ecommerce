@@ -1,4 +1,5 @@
 const express = require('express')
+const passport = require("passport");
 const router = express.Router()
 const authValidation = require('../validations/authValidation')
 const authController = require('../controllers/auth.controller')
@@ -40,4 +41,25 @@ router.post(
     authController.forgotPassword
 )
 
+router.post(
+    '/login-success',
+    authController.loginSuccess
+)
+// google
+router.get('/google',
+    passport.authenticate('google', {
+        scope: ['profile', 'email'],
+        session: false
+    })
+);
+
+router.get('/google/callback', (req, res, next) => {
+    passport.authenticate('google', (err, profile) => {
+        req.user = profile
+        next()
+    })(req, res, next)
+}, (req, res) => {
+    res.redirect(`${process.env.CLIENT_URL}/login/login-success/${req.user.id}`)
+}
+);
 module.exports = router

@@ -8,7 +8,10 @@
                     <div class="app-account__left">
                         <div class="sidebar">
                             <div class="account-info tw-flex tw-items-center tw-gap-3">
-                                <div class="avatar">
+                                <div class="avatar" v-if="user.avatarUrl">
+                                    <img :src="user.avatarUrl" alt="">
+                                </div>
+                                <div class="avatar" v-else>
                                     <img src="https://bim.gov.vn/Upload/images/staffs/avatar-default.jpg" alt="">
                                 </div>
                                 <div class="base-info">
@@ -219,7 +222,7 @@ const handleLogout = () => {
                 }
 
                 .name {
-                    font-size: 16px;
+                    font-size: 14px;
                     font-weight: 500;
                     color: $red;
                 }
