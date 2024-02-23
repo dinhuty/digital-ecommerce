@@ -1,8 +1,9 @@
 const { StatusCodes, ReasonPhrases } = require('http-status-codes')
-const { User, Product, Brand, sequelize, Category, Specification, ProductSpecification, ProductVariant, Color, Memory } = require('../database/models')
+const { User, Product, ProductImage, Brand, sequelize, Category, Specification, ProductSpecification, ProductVariant, Color, Memory } = require('../database/models')
 const { comparePassword, jwtCreate, jwtVerify } = require('../utils')
 const { jwtDecodeToken } = require('../utils/jwt')
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
+const { cloudinary } = require('../services/cloudinary')
 const { queryCondition } = require('../utils/queryCondition')
 const { NotFoundError,
     BadRequestError,
@@ -144,6 +145,11 @@ const getProductBySlug = async (req, res, next) => {
                     attributes: [],
                 },
                 {
+                    model: ProductImage,
+                    as: 'images',
+                    attributes: ['name', 'imageUrl']
+                },
+                {
                     model: ProductSpecification,
                     as: 'productSpecs',
                     attributes: ['specValue'],
@@ -244,6 +250,66 @@ const deleteProduct = async (req, res, next) => {
 
 }
 
+const addImageProduct = async (req, res) => {
+    try {
+        const {
+            productId,
+        } = req.body
+
+        const product = await Product.findOne({
+            attributes: ['id', 'name'],
+            where: {
+                id: productId
+            }
+        })
+        for (const file of req.files) {
+
+            try {
+                const uploadResponse = await cloudinary.uploader.upload('src/uploads/' + file.filename, {
+                    upload_preset: 'dshop'
+                });
+                console.log(uploadResponse)
+
+                if (file.fieldname === 'thumbUrl') {
+                    const imageUrl = cloudinary.url(uploadResponse.public_id, {
+                        width: 600,
+                        height: 600,
+                        crop: "fill",
+                        fetch_format: "auto"
+                    });
+                    await product.update({
+                        thumbUrl: imageUrl
+                    })
+                } else {
+                    const imageUrl = cloudinary.url(uploadResponse.public_id, {
+                        width: 1200,
+                        height: 570,
+                        crop: "fill",
+                        fetch_format: "auto"
+                    });
+
+                    console.log(imageUrl)
+                    const newImage = {
+                        productId: productId,
+                        imageUrl: imageUrl,
+                        name: uploadResponse.original_filename,
+                        originalName: uploadResponse.original_filename,
+                    }
+                    await ProductImage.create(newImage)
+                }
+            } catch (error) {
+                console.log(error)
+                return res.status(500).json({ error: "Upload error" })
+            }
+        }
+
+        res.status(200).json({ ok: product })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: "Add error" })
+    }
+}
+
 const getProductSale = async (req, res, next) => {
     try {
         const { quantity } = req.query
@@ -285,5 +351,6 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getProductSale,
-    getProductVariant
+    getProductVariant,
+    addImageProduct
 }

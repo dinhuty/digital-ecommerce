@@ -13,26 +13,14 @@
         <div class="product-swiper">
           <swiper :spaceBetween="10" :pagination="true" :navigation="true" :thumbs="{ swiper: thumbsSwiper }"
             :modules="modules" class="swiper-view">
-            <swiper-slide class="swiper-img">
-              <img src="https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-256gb--(2).jpg" />
-            </swiper-slide>
-            <swiper-slide class="swiper-img">
-              <img src="https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-256gb--(4).jpg" />
-            </swiper-slide>
-            <swiper-slide class="swiper-img">
-              <img src="https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-256gb--(7).jpg" />
+            <swiper-slide class="swiper-img" v-for="image in product?.images">
+              <img :src="image.imageUrl" :alt="image.name" />
             </swiper-slide>
           </swiper>
           <swiper @swiper="setThumbsSwiper" :navigation="true" :spaceBetween="10" :slidesPerView="8" :freeMode="true"
             :watchSlidesProgress="true" :modules="modules" class="swiper-slider">
-            <swiper-slide class="swiper-img">
-              <img src="https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-256gb--(2).jpg" />
-            </swiper-slide>
-            <swiper-slide class="swiper-img">
-              <img src="https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-256gb--(4).jpg" />
-            </swiper-slide>
-            <swiper-slide class="swiper-img">
-              <img src="https://cdn.tgdd.vn/Products/Images/42/305658/Slider/vi-vn-iphone-15-pro-max-256gb--(7).jpg" />
+            <swiper-slide class="swiper-img" v-for="image in product?.images">
+              <img :src="image.imageUrl" :alt="image.name" />
             </swiper-slide>
           </swiper>
         </div>

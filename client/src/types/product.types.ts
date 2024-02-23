@@ -10,7 +10,7 @@ export interface IProduct {
   slug: string;
   categoryName?: string;
   thumbUrl?: string;
-  images?: string[];
+  images?: IProductImage[];
   productSpecs?: IProductSpec[],
   productVariants?: IProductVariant[]
 }
@@ -60,4 +60,12 @@ export interface IProductVariant {
   color?: IColor,
   memory?: IMemory,
   product?: IProduct
+}
+
+export interface IProductImage {
+  id: number | string,
+  name: string,
+  imageUrl: string,
+  originalName?: string,
+  fileSize?: number
 }

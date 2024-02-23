@@ -12,7 +12,14 @@ export interface ILoginResponse {
   message: string,
   status: number
 }
-
+export enum LoginType {
+  Normal = 'normal',
+  Google = 'google',
+  Facebook = 'facebook',
+}
+export interface ILoginOptions {
+  type: LoginType;
+}
 export interface IRegisterBody {
   userName?: string;
   email: string;

@@ -11,7 +11,8 @@
         <p class="tw-text-red tw-text-sm tw-mt-0.5 tw-block tw-self-center">
           {{ (signInError as IError)?.message }}
         </p>
-        <form @submit.prevent="handleLogin" class="login-form tw-flex tw-flex-col tw-gap-5">
+        <form @submit.prevent="() => handleLogin({ type: LoginType.Normal })"
+          class="login-form tw-flex tw-flex-col tw-gap-5">
           <div class="form__group tw-flex tw-flex-col tw-gap-4">
             <div>
               <MyInput placeholder="example@gmail.com" v-model="loginData.email" @keyup.enter="loginData" name="email" />
@@ -37,7 +38,8 @@
           </div>
         </div>
         <div class="login-option tw-flex tw-justify-center tw-gap-8">
-          <div class="login-option__google tw-flex tw-gap-2 tw-items-center" @click="handleLoginWithGoogle">
+          <div class="login-option__google tw-flex tw-gap-2 tw-items-center"
+            @click="() => handleLogin({ type: LoginType.Google })">
             <div class="icon">
               <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -62,7 +64,8 @@
               Google
             </span>
           </div>
-          <div class="login-option__facebook tw-flex tw-gap-2 tw-items-center">
+          <div class="login-option__facebook tw-flex tw-gap-2 tw-items-center"
+            @click="() => handleLogin({ type: LoginType.Facebook })">
             <div class="icon">
               <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -105,7 +108,7 @@ import Container from "@components/base/Container.vue";
 import Logo from "@assets/svg/dshop-favicon-red.svg"
 import MyInput from "@components/common/MyInput/index.vue"
 import { IError } from "@/types/error.type"
-import { ILoginBody } from "@/types/auth.types";
+import { ILoginBody, ILoginOptions, LoginType } from "@/types/auth.types";
 
 const { isSignInLoading, signInError, signIn } = useAuth();
 
@@ -113,15 +116,39 @@ export interface LoginForm {
   email: string;
   password: string;
 }
+
 const loginData = ref<ILoginBody>({
   email: '',
   password: ''
 })
-const handleLogin = async () => {
-  await signIn({
-    email: loginData.value.email,
-    password: loginData.value.password
-  })
+const handleLogin = async (options: ILoginOptions) => {
+  switch (options.type) {
+    case LoginType.Normal:
+      await signIn({
+        email: loginData.value.email,
+        password: loginData.value.password
+      })
+      break;
+    case LoginType.Google:
+      window.open(
+        "http://localhost:3000/api/auth/google",
+        "_self"
+      );
+      break;
+    case LoginType.Facebook:
+      window.open(
+        "http://localhost:3000/api/auth/facebook",
+        "_self"
+      );
+      break;
+    default:
+      await signIn({
+        email: loginData.value.email,
+        password: loginData.value.password
+      })
+      break;
+  }
+
 }
 const handleLoginWithGoogle = () => {
   window.open(

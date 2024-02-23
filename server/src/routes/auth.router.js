@@ -62,4 +62,22 @@ router.get('/google/callback', (req, res, next) => {
     res.redirect(`${process.env.CLIENT_URL}/login/login-success/${req.user.id}`)
 }
 );
+
+// facebook
+router.get('/facebook',
+    passport.authenticate('facebook', {
+        scope: ["email"],
+        session: false
+    })
+);
+
+router.get('/facebook/callback', (req, res, next) => {
+    passport.authenticate('facebook', (err, profile) => {
+        req.user = profile
+        next()
+    })(req, res, next)
+}, (req, res) => {
+    res.redirect(`${process.env.CLIENT_URL}/login/login-success/${req.user.id}`)
+}
+);
 module.exports = router
