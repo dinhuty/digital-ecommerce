@@ -1,4 +1,4 @@
-# Vue 3 boilerplate - Vite, Pinia, Vue Router & Tailwind CSS
+# Vue 3  - Vite, Pinia, Vue Router & Tailwind CSS
 
 This boilerplate was created as part of my [custom Vue 3 boilerpalte tutorial](https://medium.com/@richardevcom/custom-vue3-boilerplate-9635806acde3). It will help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
